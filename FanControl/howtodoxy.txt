@@ -1,0 +1,4 @@
+To re-auto document the project please open a windows "Eingabeaufforderung" and type:
+doxygen doxygen.conf
+
+Note that the output lives only in local directories and will NOT be checked in to github on purpose.
