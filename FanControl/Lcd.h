@@ -67,8 +67,8 @@
 	The class implements an Lcd hardware driver API.
 */
 
-#define BEFEHL				0
-#define DATEN				1
+#define COMMAND				0
+#define DATA				1
 #define LCD_CLEAR			0x0C
 #define LCD_HOME			0x02
 #define LCD_ON_C			0x0E
@@ -83,11 +83,12 @@ class Lcd{
 		Lcd();
 		void init4bit();
 		void init8bit();
-		void lprintf(char*);
+		void lprintf(const char*);
 		
 	private:
 		Port LcdPort;
 		
+		// send Enable Pulse
 		void inline enFlanke();
 		
 		void configure(uint8_t,uint8_t);

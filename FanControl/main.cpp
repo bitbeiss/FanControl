@@ -23,19 +23,15 @@ int main(void) {
 	
 	Lcd myLCD = Lcd();
 	myLCD.init4bit();
+	myLCD.lprintf("Hello World!");
 	
     while (1) 
     {
-		//myLCD.lprintf("Hello World!");
-			
 		myLedBarMeter.setVoltage(count);
 		myLedBarMeter.indicateVoltage();
 		count++;
 		_delay_ms(100);
 		if (count>=255) count=0;
     }
-	
-	
-	
 }
 
