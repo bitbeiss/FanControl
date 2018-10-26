@@ -13,6 +13,7 @@
 Lcd::Lcd() {
 		Port myPort(&LCDPORT,&LCDDDR,&LCDPIN);
 		this->LcdPort = myPort;
+		*(this->LcdPort.getDataDirectionRegisterAddress()) |= (0xFF);
 }
 
 void Lcd::send(uint8_t type, uint8_t input) {
@@ -24,7 +25,7 @@ void Lcd::send(uint8_t type, uint8_t input) {
 	
 	//Lower Nibble senden
 	uint8_t pins_upper[] = {LCD_PIN_7,LCD_PIN_6,LCD_PIN_5,LCD_PIN_4};
-	for(uint8_t i=7; i>=0; i--) {
+	for(int i=7; i>=0; i--) {
 		if(isset(input,pins_upper[i])) {
 			this->LcdPort.setPin(pins_upper[i]);
 		}
@@ -70,15 +71,15 @@ void inline Lcd::enFlanke() {
 
 void Lcd::init4bit() {
 	_delay_us(15);
-	this->send(BEFEHL,0x3);
+	this->send(BEFEHL,0x03);
 	this->enFlanke();
 	_delay_ms(5);
-	this->send(BEFEHL,0x3);
+	this->send(BEFEHL,0x03);
 	this->enFlanke();
 	_delay_us(200);
-	this->send(BEFEHL,0x3);
+	this->send(BEFEHL,0x03);
 	this->enFlanke();
-	this->send(BEFEHL,0x2);
+	this->send(BEFEHL,0x02);
 	this->enFlanke();
 }
 

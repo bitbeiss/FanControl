@@ -1,6 +1,7 @@
 /*! \class Lcd
-	\author Clemens J. Zuzan	
-	\brief Class implements a harware driver for a HITACHI external LCD display.
+*	\author Clemens J. Zuzan
+*	\author Klemens Svetitsch	
+*	\brief Class implements a harware driver for a HITACHI external LCD display.
 */
 #pragma once
 #include <avr/io.h>

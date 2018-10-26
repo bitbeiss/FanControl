@@ -1,5 +1,7 @@
 /*! \class Byte
-	\brief Contains several methods not necessarily bound to a class.
+*	\author Clemens J. Zuzan
+*	\author Klemens Svetitsch	
+*	\brief Contains several methods not necessarily bound to a class.
 */
 
 #pragma once

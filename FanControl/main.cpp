@@ -22,7 +22,7 @@ int main(void) {
 	unsigned char count=0;
 	
 	Lcd myLCD = Lcd();
-	myLCD.init8bit();
+	myLCD.init4bit();
 	
     while (1) 
     {

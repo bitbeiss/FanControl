@@ -34,6 +34,10 @@ class Port {
 		/**Set a uint8_t value changing all the port's pins at once e.g. 0xFF for all pins to true */
 		inline void setPortPinValue(uint8_t);
 		inline void delPortPinValue(uint8_t);
+		
+		/**Set a uint8_t value changing all the DDR's pins at once e.g. 0xFF for all pins to true */
+		inline void setDdrPinValue(uint8_t);
+		inline void delDdrPinValue(uint8_t);
 	
 	private:
 		volatile uint8_t* PORT;

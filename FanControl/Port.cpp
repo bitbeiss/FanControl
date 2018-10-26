@@ -1,5 +1,5 @@
 ﻿/*! \file Port.cpp
-*	\brief Implemenation of Port class.
+*	\brief Implemenation of port class.
 *	\author Clemens J. Zuzan
 *	\author Klemens Svetitsch
 */
@@ -31,6 +31,14 @@ inline void Port::setPortPinValue(uint8_t val) {
 
 inline void Port::delPortPinValue(uint8_t val) {
 	*(this->getAddress()) &= ~(val);
+}
+
+inline void Port::setDdrPinValue(uint8_t val) {
+	*(this->getDataDirectionRegisterAddress()) |= (val);
+}
+
+inline void Port::delDdrPinValue(uint8_t val) {
+	*(this->getDataDirectionRegisterAddress()) &= ~(val);
 }
 
 inline void Port::setAddress(volatile uint8_t* port) {

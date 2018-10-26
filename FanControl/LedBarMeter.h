@@ -1,7 +1,7 @@
 /*! \class LedBarMeter
 *	\author Clemens J. Zuzan
 *	\author Klemens Svetitsch
-*	\brief The LedBarMeter transforms the Voltage set in the belonging Voltage variable to the number and order of activated control LEDs
+*	\brief The LedBarMeter transforms the voltage (set) in the belonging Voltage class-variable to the number (and order) of activated control LEDs
 *	The Voltage is meant to be set using setVoltage() method. Followed by a indicateVoltage() method call this leads to a representative LED
 *	indication of the voltage currently held by the class.
 */
