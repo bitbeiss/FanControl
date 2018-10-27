@@ -16,21 +16,21 @@
 
 
 int main(void) {
-	Port myPORTA(&PORTA,&DDRA,&PINA);
-	LedBarMeter myLedBarMeter(myPORTA);
+	Port ledBarPort(&PORTA,&DDRA,&PINA);
+	LedBarMeter ledBarVoltageMeter(ledBarPort);
 	
 	unsigned char count=0;
 	
-	Lcd myLCD = Lcd();
-	myLCD.init4bit();
-	myLCD.lprintf("Hello World!");
+	Lcd lcd = Lcd();
+	lcd.init4bit();
+	lcd.lprintf("Hello World!");
 	
     while (1) 
     {
-		myLedBarMeter.setVoltage(count);
-		myLedBarMeter.indicateVoltage();
+		ledBarVoltageMeter.setVoltage(count);
+		ledBarVoltageMeter.indicateVoltage();
 		count++;
-		_delay_ms(100);
+		_delay_ms(10);
 		if (count>=255) count=0;
     }
 }

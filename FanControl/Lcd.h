@@ -12,6 +12,8 @@
 //Configure LCD Port here by commenting in and out.
 //#define _PORTA			1
 #define _PORTB				1
+#define _FOURBITMODE		1
+//#define _EIGHTBITMODE		1
 //#define _PORTC			1
 //#define _PORTD			1
 
@@ -87,6 +89,17 @@ class Lcd{
 		
 	private:
 		Port LcdPort;
+		bool UseFourBitMode;
+		
+		#ifdef _FOURBITMODE
+		// sending bits 0-7 on Pins 4-7 and 4-7
+		uint8_t SendPins[8] = {LCD_PIN_4, LCD_PIN_5, LCD_PIN_6, LCD_PIN_7, LCD_PIN_4, LCD_PIN_5, LCD_PIN_6, LCD_PIN_7};
+		#endif
+		
+		#ifdef _EIGHTBITMODE
+		// sending bits 0-7 on Pins 0-7
+		uint8_t SendPins[8] = {LCD_PIN_0, LCD_PIN_1, LCD_PIN_2, LCD_PIN_3, LCD_PIN_4, LCD_PIN_5, LCD_PIN_6, LCD_PIN_7};
+		#endif
 		
 		// send Enable Pulse
 		void inline enFlanke();

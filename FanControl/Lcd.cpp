@@ -11,52 +11,54 @@
 #include "Port.h"
 
 Lcd::Lcd() {
+#ifdef _FOURBITMODE
+	this->UseFourBitMode = true;
+#elif _EIGHTBITMODE
+	this->UseFourBitMode = false;
+#endif
+	
 	// create and assign new Port configuration for LCD display	
 	Port myPort(&LCDPORT,&LCDDDR,&LCDPIN);
 	this->LcdPort = myPort;
 	
-	// set all Port B Pins to WRITE
+	// set all Pins of the LCD Port to WRITE
 	*(this->LcdPort.getDataDirectionRegisterAddress()) |= (0xFF);
 }
 
 // sends a command or data to the HD44780 LCD display
 void Lcd::send(uint8_t type, uint8_t input) {
 	if (type == COMMAND) {
-		this->LcdPort.setPin(LCD_PIN_RS);
+		// set RS Pin to 0 to send a command
+		this->LcdPort.delPin(LCD_PIN_RS);
 	}
 	else {
-		this->LcdPort.setPin(LCD_PIN_7); // @Clemens sollte das nicht PIN_RS sein?
+		// set RS pin to 1 to send data
+		this->LcdPort.setPin(LCD_PIN_RS); // @Clemens sollte das nicht PIN_RS sein?
+	}
+	
+	//Upper Nibble senden
+	for(int i = 4; i <= 7; i++) {
+		if(isset(input, i)) {
+			this->LcdPort.setPin(SendPins[i]);
+		}
+		else {
+			this->LcdPort.delPin(SendPins[i]);
+		}
+	}
+	
+	// if we are working in 4-bit mode we need to send the upper nibble now
+	// otherwise we set all of the pins and send then
+	if(this->UseFourBitMode) {
+		this->enFlanke();
 	}
 	
 	//Lower Nibble senden
-	uint8_t pins_upper[] = {LCD_PIN_7, LCD_PIN_6, LCD_PIN_5, LCD_PIN_4};
-		
-	for(int i = 0; i < 4; i++) {
-		if(isset(input,pins_upper[i])) {
-			this->LcdPort.setPin(pins_upper[i]);
+	for(int i = 0; i <= 3; i++) {
+		if(isset(input, i)) {
+			 this->LcdPort.setPin(SendPins[i]);
 		}
 		else {
-			this->LcdPort.delPin(pins_upper[i]);
-		}
-	}
-	
-	this->enFlanke();
-	
-	//////////////////////////////////////////////////////////////////////////
-	// es findet kein Bitshift statt, somit sendet die zweite Hälfte der Funktion die gleichen Daten wie die erste?
-	// es müssten ja zuerst die oberen 4 Bits und dann die unteren 4 Bits gesendet werden
-	// dh. zuerst input senden (obere 4 Bits weil auf Pins 4,5,6,7 gesendet wird), dann input << 4 (untere 4 Bits werden auf Bits 4,5,6,7 geshiftet)
-	
-	//Upper Nibble senden
-	input <<= 4;
-	uint8_t pins_lower[] = {LCD_PIN_7, LCD_PIN_6, LCD_PIN_5, LCD_PIN_4};
-		
-	for(int i = 0; i < 4; i++) {
-		if(isset(input,pins_lower[i])) {
-			 this->LcdPort.setPin(pins_lower[i]);
-		}
-		else {
-			this->LcdPort.delPin(pins_lower[i]);
+			this->LcdPort.delPin(SendPins[i]);
 		}
 	}
 	
@@ -85,15 +87,15 @@ void inline Lcd::enFlanke() {
 void Lcd::init4bit() {
 	_delay_ms(15);
 	this->send(COMMAND,0x03);
-	this->enFlanke();
+	//this->enFlanke();
 	_delay_ms(5);
 	this->send(COMMAND,0x03);
-	this->enFlanke();
+	//this->enFlanke();
 	_delay_us(200);
 	this->send(COMMAND,0x03);
-	this->enFlanke();
+	//this->enFlanke();
 	this->send(COMMAND,0x02);
-	this->enFlanke();
+	//this->enFlanke();
 }
 
 void Lcd::init8bit() {

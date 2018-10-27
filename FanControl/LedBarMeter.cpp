@@ -19,8 +19,8 @@ LedBarMeter::~LedBarMeter(){
 }
 
 void LedBarMeter::init() {
-	*(this->getPort().getDataDirectionRegisterAddress()) |= 0x0F;  //leave P0-P3 as output untouched; lower 4 are indicator LEDs.
-	*(this->getPort().getAddress()) &= ~(0x00);
+	*(this->getPort().getDataDirectionRegisterAddress()) |= 0xF0;  //upper nibble (lower LED row) shall be the indicator
+	*(this->getPort().getAddress()) &= ~(0x0F); // set all Pins for LED bar output to 0 (LEDs off), leave lower pins untouched
 }
 
 void LedBarMeter::setPort(Port& pt ) {
