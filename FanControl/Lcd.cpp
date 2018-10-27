@@ -18,8 +18,8 @@ Lcd::Lcd() {
 #endif
 	
 	// create and assign new Port configuration for LCD display	
-	Port myPort(&LCDPORT,&LCDDDR,&LCDPIN);
-	this->LcdPort = myPort;
+	Port lcdPort(&LCDPORT,&LCDDDR,&LCDPIN);
+	this->LcdPort = lcdPort;
 	
 	// set all Pins of the LCD Port to WRITE
 	*(this->LcdPort.getDataDirectionRegisterAddress()) |= (0xFF);
