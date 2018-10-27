@@ -23,7 +23,7 @@ int main(void) {
 	
 	Lcd lcd = Lcd();
 	lcd.init4bit();
-	lcd.lprintf("Hello World!");
+	lcd.Print("Hello World!");
 	
     while (1) 
     {

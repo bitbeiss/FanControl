@@ -78,6 +78,8 @@
 #define LCD_SET_4BIT		0x2C //!<4-Bit mode, Dual-line, F 0/1: 5x8 font		
 #define LCD_SET_NOSHIFT		0x06
 #define LCD_SETDRAM			0x80
+#define LCD_FIRST_LINE_START_ADDRESS	0x00
+#define LCD_SECOND_LINE_START_ADDRESS	0x40
 
 
 class Lcd{
@@ -85,7 +87,8 @@ class Lcd{
 		Lcd();
 		void init4bit();
 		void init8bit();
-		void lprintf(const char*);
+		void Print(const char*);
+		void SetCursorPosition(int row, uint8_t line);
 		
 	private:
 		Port LcdPort;
@@ -106,5 +109,4 @@ class Lcd{
 		
 		void configure(uint8_t,uint8_t);
 		void inline send(uint8_t, uint8_t);
-		
 	};

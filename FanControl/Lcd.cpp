@@ -65,10 +65,10 @@ void Lcd::send(uint8_t type, uint8_t input) {
 	this->enFlanke();
 	
 	//Auf LCD Controller warten
-	_delay_ms(5);
+	_delay_us(50);
 }
 
-void Lcd::lprintf(const char* text) {
+void Lcd::Print(const char* text) {
 	//Einzelne Zeichen aus Text holen und senden.
 	
 	for(int pos = 0; text[pos] != '\0'; pos++) {
@@ -81,7 +81,7 @@ void inline Lcd::enFlanke() {
 	this->LcdPort.setPin(LCD_PIN_E);
 	_delay_us(50);
 	this->LcdPort.delPin(LCD_PIN_E);
-	_delay_us(50);
+	//_delay_us(50);
 }
 
 void Lcd::init4bit() {
@@ -89,13 +89,23 @@ void Lcd::init4bit() {
 	this->send(COMMAND,0x03);
 	//this->enFlanke();
 	_delay_ms(5);
+	
 	this->send(COMMAND,0x03);
 	//this->enFlanke();
 	_delay_us(200);
+	
 	this->send(COMMAND,0x03);
 	//this->enFlanke();
+	_delay_us(200);
+	
+	// enable 4-bit mode
 	this->send(COMMAND,0x02);
 	//this->enFlanke();
+	_delay_ms(5);
+	
+	// clear screen
+	this->send(COMMAND,0x01);
+	_delay_ms(2);
 }
 
 void Lcd::init8bit() {
@@ -116,3 +126,18 @@ void Lcd::configure(uint8_t type, uint8_t lcd_cmd) {
 }
 
 
+
+void Lcd::SetCursorPosition(int row, uint8_t line)
+{
+	if (row >= 40) row %= 40;
+	
+	uint8_t command = LCD_SETDRAM;
+	
+	if (line == 2) {
+		command |= LCD_SECOND_LINE_START_ADDRESS + row;
+	} else {
+		command |= LCD_FIRST_LINE_START_ADDRESS + row;
+	}
+	
+	this->send(COMMAND, command);
+}
