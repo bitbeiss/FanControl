@@ -15,10 +15,13 @@ bool isset(uint8_t pos, uint8_t byte) {
 	}
 }
 
-void set(uint8_t Port, uint8_t bit) {
-	Port |= (1 << bit);
+// was tut die Funktion? übergeben wird ja ein value, kein Pointer; dh die Funktion ändert den value, gibt aber nichts zurück
+/*void set(uint8_t port, uint8_t bit) {
+	port |= (1 << bit);
 }
 
-void del(uint8_t	Port, uint8_t bit) {
-	Port &= ~(1 << bit);
+// Same here
+void del(uint8_t port, uint8_t bit) {
+	port &= ~(1 << bit);
 }
+*/

@@ -73,11 +73,30 @@
 #define DATA				1
 #define LCD_CLEAR			0x0C
 #define LCD_HOME			0x02
-#define LCD_ON_C			0x0E
-#define LDC_OFF				0x08
-#define LCD_SET_4BIT		0x2C //!<4-Bit mode, Dual-line, F 0/1: 5x8 font		
+
+#define LCD_DISPLAY_CTRL	0x08
+#define LCD_OFF				0x00
+#define LCD_ON				0x04
+#define LCD_CURSOR_OFF		0x00
+#define LCD_CURSOR_ON		0x02
+#define LCD_BLINK_OFF		0x00
+#define LCD_BLINK_ON		0x01
+
+// combine function set with the modes below
+#define LCD_FUNCTION_SET	0x20
+#define LCD_4BIT_MODE		0x00
+#define LCD_8BIT_MODE		0x10
+#define LCD_TWO_LINE_MODE	0x08
+#define LCD_ONE_LINE_MODE	0x00
+#define LCD_FONT_5X10		0x04
+#define LCD_FONT_5X8		0x00
+
+//#define LCD_ON_C			0x0E
+//#define LDC_OFF			0x08
+//#define LCD_SET_4BIT		0x2C //!<4-Bit mode, Dual-line, F 0/1: 5x8 font		
 #define LCD_SET_NOSHIFT		0x06
-#define LCD_SETDRAM			0x80
+
+#define LCD_SET_DRAM_ADDRESS			0x80
 #define LCD_FIRST_LINE_START_ADDRESS	0x00
 #define LCD_SECOND_LINE_START_ADDRESS	0x40
 
@@ -87,31 +106,41 @@ class Lcd{
 		Lcd();
 		void init4bit();
 		void init8bit();
-		void print(const char*);
-		void setCursorPosition(int row, uint8_t line);
+		void print(char*);
+		void setCursorPosition(int line, uint8_t row);
+		void send(uint8_t type, uint8_t input);
+		void send(uint8_t type, uint8_t input, bool long_delay);
 		
 	private:
 		Port mLcdPort;
-		//const bool mUseFourBitMode;
 		
 		// we are assuming that during runtime no switch between 4 and 8-bit mode will be necessary
 		// because it is unlikely that the pin connections will be changed during runtime
 		
 		#ifdef _FOURBITMODE
 		const bool mUseFourBitMode{true};
-		// sending bits 0-7 on Pins 4-7 and 4-7
-		uint8_t SendPins[8] = {LCD_PIN_4, LCD_PIN_5, LCD_PIN_6, LCD_PIN_7, LCD_PIN_4, LCD_PIN_5, LCD_PIN_6, LCD_PIN_7};
-			
+		
 		#elif _EIGHTBITMODE
 		const bool mUseFourBitMode{false};
-		// sending bits 0-7 on Pins 0-7
-		uint8_t SendPins[8] = {LCD_PIN_0, LCD_PIN_1, LCD_PIN_2, LCD_PIN_3, LCD_PIN_4, LCD_PIN_5, LCD_PIN_6, LCD_PIN_7};
-			
+		
 		#endif
+		
+		
+		// sending bits 0-7 on Pins 4-7 and 4-7
+		uint8_t mSendPins4Bit[8] = {LCD_PIN_4, LCD_PIN_5, LCD_PIN_6, LCD_PIN_7, LCD_PIN_4, LCD_PIN_5, LCD_PIN_6, LCD_PIN_7};
+			
+		// sending bits 0-7 on Pins 0-7
+		// pins for lower four bits are set the same because we don't actually have them connected
+		uint8_t mSendPins8Bit[8] = {LCD_PIN_4, LCD_PIN_5, LCD_PIN_6, LCD_PIN_7, LCD_PIN_4, LCD_PIN_5, LCD_PIN_6, LCD_PIN_7};
+		//uint8_t SendPins8Bit[8] = {LCD_PIN_0, LCD_PIN_1, LCD_PIN_2, LCD_PIN_3, LCD_PIN_4, LCD_PIN_5, LCD_PIN_6, LCD_PIN_7};
+			
 		
 		// send Enable Pulse
 		void inline enPulse();
+		void inline setRegisterSelectPin(uint8_t type);
 		
 		void configure(uint8_t,uint8_t);
-		void inline send(uint8_t, uint8_t);
+		
+		void send4bit(uint8_t type, uint8_t input);
+		void send8bit(uint8_t type, uint8_t input);
 	};
