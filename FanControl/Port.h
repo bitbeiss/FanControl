@@ -40,7 +40,7 @@ class Port {
 		inline void delDdrPinValue(uint8_t);
 	
 	private:
-		volatile uint8_t* PORT;
-		volatile uint8_t* DDR;
-		volatile uint8_t* PIN;
+		volatile uint8_t* mPortRegister;
+		volatile uint8_t* mDataDirectionRegister;
+		volatile uint8_t* mPinRegister;
 };

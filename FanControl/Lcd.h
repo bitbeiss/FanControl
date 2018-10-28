@@ -87,25 +87,30 @@ class Lcd{
 		Lcd();
 		void init4bit();
 		void init8bit();
-		void Print(const char*);
-		void SetCursorPosition(int row, uint8_t line);
+		void print(const char*);
+		void setCursorPosition(int row, uint8_t line);
 		
 	private:
-		Port LcdPort;
-		bool UseFourBitMode;
+		Port mLcdPort;
+		//const bool mUseFourBitMode;
+		
+		// we are assuming that during runtime no switch between 4 and 8-bit mode will be necessary
+		// because it is unlikely that the pin connections will be changed during runtime
 		
 		#ifdef _FOURBITMODE
+		const bool mUseFourBitMode{true};
 		// sending bits 0-7 on Pins 4-7 and 4-7
 		uint8_t SendPins[8] = {LCD_PIN_4, LCD_PIN_5, LCD_PIN_6, LCD_PIN_7, LCD_PIN_4, LCD_PIN_5, LCD_PIN_6, LCD_PIN_7};
-		#endif
-		
-		#ifdef _EIGHTBITMODE
+			
+		#elif _EIGHTBITMODE
+		const bool mUseFourBitMode{false};
 		// sending bits 0-7 on Pins 0-7
 		uint8_t SendPins[8] = {LCD_PIN_0, LCD_PIN_1, LCD_PIN_2, LCD_PIN_3, LCD_PIN_4, LCD_PIN_5, LCD_PIN_6, LCD_PIN_7};
+			
 		#endif
 		
 		// send Enable Pulse
-		void inline enFlanke();
+		void inline enPulse();
 		
 		void configure(uint8_t,uint8_t);
 		void inline send(uint8_t, uint8_t);

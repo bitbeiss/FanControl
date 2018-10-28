@@ -10,65 +10,60 @@
 #include "Lcd.h"
 #include "Port.h"
 
-Lcd::Lcd() {
-#ifdef _FOURBITMODE
-	this->UseFourBitMode = true;
-#elif _EIGHTBITMODE
-	this->UseFourBitMode = false;
-#endif
-	
+Lcd::Lcd()
+{
 	// create and assign new Port configuration for LCD display	
 	Port lcdPort(&LCDPORT,&LCDDDR,&LCDPIN);
-	this->LcdPort = lcdPort;
+	this->mLcdPort = lcdPort;
 	
 	// set all Pins of the LCD Port to WRITE
-	*(this->LcdPort.getDataDirectionRegisterAddress()) |= (0xFF);
+	*(this->mLcdPort.getDataDirectionRegisterAddress()) |= (0xFF);
 }
 
 // sends a command or data to the HD44780 LCD display
 void Lcd::send(uint8_t type, uint8_t input) {
 	if (type == COMMAND) {
 		// set RS Pin to 0 to send a command
-		this->LcdPort.delPin(LCD_PIN_RS);
+		this->mLcdPort.delPin(LCD_PIN_RS);
 	}
 	else {
 		// set RS pin to 1 to send data
-		this->LcdPort.setPin(LCD_PIN_RS); // @Clemens sollte das nicht PIN_RS sein?
+		this->mLcdPort.setPin(LCD_PIN_RS); // @Clemens sollte das nicht PIN_RS sein?
 	}
 	
 	//Upper Nibble senden
 	for(int i = 4; i <= 7; i++) {
 		if(isset(input, i)) {
-			this->LcdPort.setPin(SendPins[i]);
+			this->mLcdPort.setPin(SendPins[i]);
 		}
 		else {
-			this->LcdPort.delPin(SendPins[i]);
+			this->mLcdPort.delPin(SendPins[i]);
 		}
 	}
 	
 	// if we are working in 4-bit mode we need to send the upper nibble now
 	// otherwise we set all of the pins and send then
-	if(this->UseFourBitMode) {
-		this->enFlanke();
+	if(this->mUseFourBitMode) {
+		this->enPulse();
 	}
 	
 	//Lower Nibble senden
 	for(int i = 0; i <= 3; i++) {
 		if(isset(input, i)) {
-			 this->LcdPort.setPin(SendPins[i]);
+			 this->mLcdPort.setPin(SendPins[i]);
 		}
 		else {
-			this->LcdPort.delPin(SendPins[i]);
+			this->mLcdPort.delPin(SendPins[i]);
 		}
 	}
 	
-	this->enFlanke();
+	this->enPulse();
 	
 	//Auf LCD Controller warten
 	_delay_us(50);
 }
 
-void Lcd::Print(const char* text) {
+void Lcd::print(const char* text) {
 	//Einzelne Zeichen aus Text holen und senden.
 	
 	for(int pos = 0; text[pos] != '\0'; pos++) {
@@ -77,10 +72,10 @@ void Lcd::Print(const char* text) {
 }
 
 // send Enable Pulse
-void inline Lcd::enFlanke() {
-	this->LcdPort.setPin(LCD_PIN_E);
+void inline Lcd::enPulse() {
+	this->mLcdPort.setPin(LCD_PIN_E);
 	_delay_us(50);
-	this->LcdPort.delPin(LCD_PIN_E);
+	this->mLcdPort.delPin(LCD_PIN_E);
 	//_delay_us(50);
 }
 
@@ -111,15 +106,15 @@ void Lcd::init4bit() {
 void Lcd::init8bit() {
 	_delay_us(15);
 	this->send(COMMAND,0x2C);
-	this->enFlanke();
+	this->enPulse();
 	_delay_ms(5);
 	this->send(COMMAND,0x0C);
-	this->enFlanke();
+	this->enPulse();
 	_delay_us(200);
 	this->send(COMMAND,0x01);
-	this->enFlanke();
+	this->enPulse();
 	this->send(COMMAND,0x2);
-	this->enFlanke();
+	this->enPulse();
 }
 
 void Lcd::configure(uint8_t type, uint8_t lcd_cmd) {
@@ -127,7 +122,7 @@ void Lcd::configure(uint8_t type, uint8_t lcd_cmd) {
 
 
 
-void Lcd::SetCursorPosition(int row, uint8_t line)
+void Lcd::setCursorPosition(int row, uint8_t line)
 {
 	if (row >= 40) row %= 40;
 	

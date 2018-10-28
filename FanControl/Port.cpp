@@ -8,11 +8,18 @@
 
 using namespace std;
 
-Port::Port(volatile uint8_t* port_reg, volatile uint8_t* ddr_reg, volatile uint8_t* pin_reg) {
-	this->setAddress(port_reg);
-	this->setDataDirectionRegisterAddress(ddr_reg);
-	this->setPinRegisterAddress(pin_reg);
-}
+Port::Port(
+	volatile uint8_t* port_reg,
+	volatile uint8_t* ddr_reg,
+	volatile uint8_t* pin_reg)
+	:
+	mPortRegister(port_reg),
+	mDataDirectionRegister(ddr_reg),
+	mPinRegister(pin_reg) {}
+		
+	//this->setAddress(port_reg);
+	//this->setDataDirectionRegisterAddress(ddr_reg);
+	//this->setPinRegisterAddress(pin_reg);
 
 Port::Port() {
 }
@@ -42,25 +49,25 @@ inline void Port::delDdrPinValue(uint8_t val) {
 }
 
 inline void Port::setAddress(volatile uint8_t* port) {
-	this->PORT = port;
+	this->mPortRegister = port;
 }
 
 volatile uint8_t* Port::getAddress() {
-	return this->PORT;
+	return this->mPortRegister;
 }
 
 inline void Port::setDataDirectionRegisterAddress(volatile uint8_t* ddr) {
-	this->DDR = ddr;
+	this->mDataDirectionRegister = ddr;
 }
 
 volatile uint8_t* Port::getDataDirectionRegisterAddress() {
-	return this->DDR;
+	return this->mDataDirectionRegister;
 }
 
 inline void Port::setPinRegisterAddress(volatile uint8_t* pin) {
-	this->PIN = pin;
+	this->mPinRegister = pin;
 }
 
 volatile uint8_t* Port::getPinRegisterAddress() {
-	return this->PIN;
+	return this->mPinRegister;
 }
