@@ -110,6 +110,7 @@ class Lcd{
 		void setCursorPosition(int line, uint8_t row);
 		void send(uint8_t type, uint8_t input);
 		void send(uint8_t type, uint8_t input, bool long_delay);
+		void clearDisplay();
 		
 	private:
 		Port mLcdPort;

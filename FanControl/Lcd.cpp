@@ -143,9 +143,8 @@ void Lcd::init4bit() {
 	this->send4bit(COMMAND, LCD_DISPLAY_CTRL | LCD_ON | LCD_CURSOR_OFF | LCD_BLINK_OFF);
 	_delay_us(40);
 	
-	// clear screen
-	this->send4bit(COMMAND, 0x01);
-	_delay_ms(2);
+	
+	this->clearDisplay();
 }
 
 void Lcd::init8bit() {
@@ -180,4 +179,11 @@ void Lcd::setCursorPosition(int line, uint8_t row)
 	}
 	
 	this->send(COMMAND, command, false);
+}
+
+
+// clears the screen
+void Lcd::clearDisplay() {
+	this->send(COMMAND, 0x01);
+	_delay_ms(2);
 }
