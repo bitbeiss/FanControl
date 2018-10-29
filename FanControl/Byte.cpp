@@ -8,11 +8,7 @@
 #include "Byte.h"
 
 bool isset(uint8_t pos, uint8_t byte) {
-	if (pos>7) return 0;
-	else {
-		if ((byte) && (1 << pos)) return 0;
-		else return 0;
-	}
+	return (byte & (1 << pos));
 }
 
 // was tut die Funktion? übergeben wird ja ein value, kein Pointer; dh die Funktion ändert den value, gibt aber nichts zurück

@@ -15,14 +15,14 @@ using namespace std;
 class Port {
 	
 	public:
-		Port(volatile uint8_t*, volatile uint8_t*, volatile uint8_t*);
+		Port(volatile uint8_t* port_reg, volatile uint8_t* ddr_reg, volatile uint8_t* pin_reg);
 		Port();
 		
 		inline void setAddress(volatile uint8_t*);
 		volatile uint8_t* getAddress();
 		
 		inline void setDataDirectionRegisterAddress(volatile uint8_t*);
-		volatile	uint8_t* getDataDirectionRegisterAddress();
+		volatile uint8_t* getDataDirectionRegisterAddress();
 		
 		inline void setPinRegisterAddress(volatile uint8_t*);
 		inline volatile uint8_t* getPinRegisterAddress();

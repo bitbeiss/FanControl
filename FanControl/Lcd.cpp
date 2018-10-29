@@ -3,6 +3,9 @@
 *	\author Clemens J. Zuzan
 *	\author Klemens Svetitsch
 */
+
+#define F_CPU 8000000
+
 #include <avr/io.h>
 #include <util/delay.h>
 
@@ -23,13 +26,18 @@ Lcd::Lcd()
 
 void Lcd::send8bit(uint8_t type, uint8_t input) {
 	setRegisterSelectPin(type);
+	Port led_port = Port(&PORTA, &DDRA, &PINA);
+	DDRA = 0xFF;
 	
-	for(int i = 0; i <= 7; i++) {
-		if(isset(input, i)) {
+	for(volatile int i = 0; i <= 3; i++) {
+		//bit_value = isset(input, i);
+		if(input & (1 << i)) {
 			this->mLcdPort.setPin(mSendPins8Bit[i]);
+			led_port.setPin(i);
 		}
 		else {
 			this->mLcdPort.delPin(mSendPins8Bit[i]);
+			led_port.delPin(i);
 		}
 	}
 	
@@ -40,13 +48,17 @@ void Lcd::send8bit(uint8_t type, uint8_t input) {
 void Lcd::send4bit(uint8_t type, uint8_t input) {
 	setRegisterSelectPin(type);
 	
+	Port led_port = Port(&PORTA, &DDRA, &PINA);
+	
 	//Upper Nibble senden
 	for(int i = 4; i <= 7; i++) {
-		if(isset(input, i)) {
+		if(input & (1 << i)) {
 			this->mLcdPort.setPin(mSendPins4Bit[i]);
+			led_port.setPin(i);
 		}
 		else {
 			this->mLcdPort.delPin(mSendPins4Bit[i]);
+			led_port.delPin(i);
 		}
 	}
 	
@@ -55,11 +67,13 @@ void Lcd::send4bit(uint8_t type, uint8_t input) {
 	
 	//Lower Nibble senden
 	for(int i = 0; i <= 3; i++) {
-		if(isset(input, i)) {
+		if(input & (1 << i)) {
 			this->mLcdPort.setPin(mSendPins4Bit[i]);
+			led_port.setPin(i);
 		}
 		else {
 			this->mLcdPort.delPin(mSendPins4Bit[i]);
+			led_port.delPin(i);
 		}
 	}
 	
@@ -118,9 +132,12 @@ void inline Lcd::enPulse() {
 	//_delay_us(50);
 }
 
+
 void Lcd::init4bit() {
+	*(this->mLcdPort.getAddress()) = 0x00;
+	
 	// wait for some time, according to data sheet
-	_delay_ms(50);
+	_delay_ms(15);
 	
 	this->send8bit(COMMAND, 0x03);
 	_delay_ms(5);
@@ -129,22 +146,32 @@ void Lcd::init4bit() {
 	_delay_us(200);
 	
 	this->send8bit(COMMAND, 0x03);
-	_delay_us(200);
+	_delay_us(40);
 	
 	// enable 4-bit mode (we are still in 8 bit mode)
 	this->send8bit(COMMAND, 0x02);
-	_delay_ms(5);
+	_delay_ms(2);
+	
+	volatile uint8_t command;
 	
 	// set two line mode
-	this->send4bit(COMMAND, LCD_FUNCTION_SET | LCD_4BIT_MODE | LCD_TWO_LINE_MODE | LCD_FONT_5X8);
+	command = LCD_FUNCTION_SET | LCD_4BIT_MODE | LCD_TWO_LINE_MODE | LCD_FONT_5X8;
+	this->send4bit(COMMAND, command);
 	_delay_us(40);
 	
 	// set LCD on, cursor off, cursor blinking off
-	this->send4bit(COMMAND, LCD_DISPLAY_CTRL | LCD_ON | LCD_CURSOR_OFF | LCD_BLINK_OFF);
+	command = LCD_DISPLAY_CTRL | LCD_ON | LCD_CURSOR_ON | LCD_BLINK_ON;
+	this->send4bit(COMMAND, command);
 	_delay_us(40);
 	
-	
 	this->clearDisplay();
+	
+	// return home
+	this->send4bit(COMMAND, 0x02);
+	_delay_ms(2);
+	
+	/*this->send4bit(DATA, 49);
+	_delay_ms(2);*/
 }
 
 void Lcd::init8bit() {
