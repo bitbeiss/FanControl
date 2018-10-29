@@ -29,6 +29,7 @@ void Lcd::send8bit(uint8_t type, uint8_t input) {
 	Port led_port = Port(&PORTA, &DDRA, &PINA);
 	DDRA = 0xFF;
 	
+	// ToDo i<=7 in 8 bit mode?
 	for(volatile int i = 0; i <= 3; i++) {
 		//bit_value = isset(input, i);
 		if(input & (1 << i)) {
@@ -50,7 +51,7 @@ void Lcd::send4bit(uint8_t type, uint8_t input) {
 	
 	Port led_port = Port(&PORTA, &DDRA, &PINA);
 	
-	//Upper Nibble senden
+	// send upper Nibble
 	for(int i = 4; i <= 7; i++) {
 		if(input & (1 << i)) {
 			this->mLcdPort.setPin(mSendPins4Bit[i]);
@@ -62,10 +63,10 @@ void Lcd::send4bit(uint8_t type, uint8_t input) {
 		}
 	}
 	
-	//latch
+	// latch
 	this->enPulse();
 	
-	//Lower Nibble senden
+	// send lower nibble
 	for(int i = 0; i <= 3; i++) {
 		if(input & (1 << i)) {
 			this->mLcdPort.setPin(mSendPins4Bit[i]);
@@ -77,7 +78,7 @@ void Lcd::send4bit(uint8_t type, uint8_t input) {
 		}
 	}
 	
-	//latch
+	// latch
 	this->enPulse();
 }
 
@@ -117,7 +118,7 @@ void Lcd::send(uint8_t type, uint8_t input, bool long_delay) {
 }
 
 void Lcd::print(char* text) {
-	//Einzelne Zeichen aus Text holen und senden.
+	// retrieve single characters from text and send these.
 	
 	for(int pos = 0; text[pos] != '\0'; pos++) {
 		this->send(DATA, text[pos], false);
