@@ -1,7 +1,9 @@
 /*! \class Lcd
 *	\author Clemens J. Zuzan
 *	\author Klemens Svetitsch	
-*	\brief Class implements a harware driver for a HITACHI external LCD display.
+*	\brief Class implements a hardware driver for a HITACHI 44780 external LCD display.
+*	\brief Represents an Lcd data structure with all methods belonging to the liquid crystal display.
+*	The class implements an Lcd hardware driver API.
 */
 #pragma once
 #include <avr/io.h>
@@ -65,8 +67,7 @@
 #define LCD_PIN_7			PD7
 #endif
 /*! \class Lcd
-	\brief Represents an Lcd data structure with all methods belonging to the liquid crystal display.
-	The class implements an Lcd hardware driver API.
+	
 */
 
 #define COMMAND				0
