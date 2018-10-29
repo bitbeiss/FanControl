@@ -66,9 +66,6 @@
 #define LCD_PIN_6			PD6
 #define LCD_PIN_7			PD7
 #endif
-/*! \class Lcd
-	
-*/
 
 #define COMMAND				0
 #define DATA				1
