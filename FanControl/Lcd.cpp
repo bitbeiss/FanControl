@@ -26,19 +26,19 @@ Lcd::Lcd()
 
 void Lcd::send8bit(uint8_t type, uint8_t input) {
 	setRegisterSelectPin(type);
-	Port led_port = Port(&PORTA, &DDRA, &PINA);
-	DDRA = 0xFF;
+	//Port led_port = Port(&PORTA, &DDRA, &PINA);
+	//DDRA = 0xFF;
 	
 	// ToDo i<=7 in 8 bit mode?
 	for(volatile int i = 0; i <= 3; i++) {
 		//bit_value = isset(input, i);
 		if(input & (1 << i)) {
 			this->mLcdPort.setPin(mSendPins8Bit[i]);
-			led_port.setPin(i);
+			//led_port.setPin(i);
 		}
 		else {
 			this->mLcdPort.delPin(mSendPins8Bit[i]);
-			led_port.delPin(i);
+			//led_port.delPin(i);
 		}
 	}
 	
@@ -49,17 +49,17 @@ void Lcd::send8bit(uint8_t type, uint8_t input) {
 void Lcd::send4bit(uint8_t type, uint8_t input) {
 	setRegisterSelectPin(type);
 	
-	Port led_port = Port(&PORTA, &DDRA, &PINA);
+	//Port led_port = Port(&PORTA, &DDRA, &PINA);
 	
 	// send upper Nibble
 	for(int i = 4; i <= 7; i++) {
 		if(input & (1 << i)) {
 			this->mLcdPort.setPin(mSendPins4Bit[i]);
-			led_port.setPin(i);
+			//led_port.setPin(i);
 		}
 		else {
 			this->mLcdPort.delPin(mSendPins4Bit[i]);
-			led_port.delPin(i);
+			//led_port.delPin(i);
 		}
 	}
 	
@@ -70,11 +70,11 @@ void Lcd::send4bit(uint8_t type, uint8_t input) {
 	for(int i = 0; i <= 3; i++) {
 		if(input & (1 << i)) {
 			this->mLcdPort.setPin(mSendPins4Bit[i]);
-			led_port.setPin(i);
+			//led_port.setPin(i);
 		}
 		else {
 			this->mLcdPort.delPin(mSendPins4Bit[i]);
-			led_port.delPin(i);
+			//led_port.delPin(i);
 		}
 	}
 	
@@ -161,7 +161,8 @@ void Lcd::init4bit() {
 	_delay_us(40);
 	
 	// set LCD on, cursor off, cursor blinking off
-	command = LCD_DISPLAY_CTRL | LCD_ON | LCD_CURSOR_ON | LCD_BLINK_ON;
+	//command = LCD_DISPLAY_CTRL | LCD_ON | LCD_CURSOR_ON | LCD_BLINK_ON;
+	command = LCD_DISPLAY_CTRL | LCD_ON | LCD_CURSOR_OFF | LCD_BLINK_OFF;
 	this->send4bit(COMMAND, command);
 	_delay_us(40);
 	
