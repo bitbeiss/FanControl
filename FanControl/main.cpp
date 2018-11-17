@@ -5,7 +5,7 @@
 *	\author Klemens Svetitsch
 */ 
 
-#define F_CPU 8000000
+#include "main.h"
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
@@ -16,6 +16,7 @@
 #include "LedBarMeter.h"
 #include "Byte.h"
 #include "Lcd.h"
+#include "Fan.h"
 
 const long LCD_COUNTER_START = 100000;
 const long LCD_COUNTER_END = 500000;
@@ -55,42 +56,13 @@ void number_to_ascii(long number, char chars[]) {
 	chars[i] = '\0';
 }
 
-int pulse_cnt = 0;
-int pulse_width_us, current_timer_value;
-int rpm;
-const unsigned long PULSE_WIDTH_MULTIPLIER = 1000000 * 64 / F_CPU; // factor to get from timer counts to microseconds with prescaler 64
-const unsigned long RPM_MULTIPLIER = (1000000 * 60)/(2 * PULSE_WIDTH_MULTIPLIER); // times 60 for rps to rpm, times 1m for rpus to rps
 
-ISR (INT0_vect) {
-	current_timer_value = TCNT1;
-	
-	pulse_cnt++;
-	//rpm = 3750000 / pulse_width_cnt;
-	pulse_width_us = PULSE_WIDTH_MULTIPLIER * current_timer_value;
-	//rpm = (60*1000000/pulse_width_us) >> 1;
-	rpm = RPM_MULTIPLIER/current_timer_value;
-	TCNT1 = 0; // reset counter
-}
 
-void initPWMCounterInterrupt() {
-	GICR |= (1 << INT0); // configure INT0 (PD2) as active external Interrupt
-	MCUCR |= (1 << ISC01); 
-	MCUCR &= ~(1 << ISC00); // trigger Interrupt INT0 on falling edge
-}	
 
-void initFanRPMPins() {
-	
-}
-
-void initFanRPMMeasurementTimer() { 
-	TCCR1B |= (1 << CS11) | (1 << CS10); // set up timer with prescaler = 64
-	TCNT1 = 0; // initialize counter
-}
 
 int main(void) {
-	//initFanRPMPins();
-	initPWMCounterInterrupt();
-	initFanRPMMeasurementTimer();
+	Fan fan = Fan();
+	
 	sei();
 	
 	
@@ -126,13 +98,13 @@ int main(void) {
 			//lcd.print(counter_output_str);
 			
 			//number_to_ascii(pulse_cnt>>1, counter_output_str);
-			number_to_ascii(pulse_width_us, pulse_length_us_str);
+			number_to_ascii(fan.GetPulseTimeMicroseconds(), pulse_length_us_str);
 			lcd.print(pulse_length_us_str);
 			lcd.print("us");
 			
 			lcd.print(" ");
 			
-			number_to_ascii(rpm, pulse_length_us_str);
+			number_to_ascii(fan.GetRPM(), pulse_length_us_str);
 			lcd.print(pulse_length_us_str);
 			lcd.print("rpm");
 			
