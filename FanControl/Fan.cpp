@@ -18,8 +18,6 @@ Fan::Fan() : m_tachymeter(INT0), m_strengthInput(PA0, this)//, m_adc_callback(th
 {	
 	// we are not recording a signal here, just reading some human input, therefore response time and time resolution are not essential
 	m_strengthInput.SetPrescaler(_128);
-	//m_adc_callback = ADCInput::Callback(this, (&(Fan::ReceiveUserStrengthInput)));
-	//m_strengthInput.OnHasNewValue = &m_adc_callback;
 	m_strengthInput.Start();
 } //Fan
 

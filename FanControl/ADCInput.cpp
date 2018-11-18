@@ -59,7 +59,6 @@ void ADCInput::SetPrescaler(enum ADCPrescaler prescaler)
 	}
 	
 	ADCSRA = (ADCSRA & ~ADCInput::PRESCALER_MASK) | (numeric_value & ADCInput::PRESCALER_MASK);
-	//ADCSRA |= (1 << ADPS0) | (1 << ADPS1) | (1 << ADPS2); // set prescaler 128
 }
 
 void ADC_vect(void) {
@@ -67,17 +66,7 @@ void ADC_vect(void) {
 
 	ADCInput* adc = ADCInput::s_adcInputs[trigger_pin];
 	if (adc != 0) {
-		//adc->OnHasNewValue->m_callback((ADCH << 8) | ADCL);
-		//adc->OnHasNewValue->m_target->Call((ADCH << 8) | ADCL);
 		adc->m_callbackTarget->ReceiveADCValue((ADCH << 8) | ADCL);
 	}
-	//(*(this->OnHasNewValue))((ADCH << 8) | ADCL);
-}
-
-
-/*ISR(ADC_vect)
-{
-	ADCInput input = ADCInput(0);
-	(*input.OnHasNewValue)((ADCH << 8) + ADCL);
 	//ADCSRA |= (1 << ADSC);		// Start Conversion
-}*/
+}

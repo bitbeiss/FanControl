@@ -24,20 +24,6 @@ public:
 		virtual void ReceiveADCValue(uint16_t value) = 0;
 	};
 
-	//void (*OnHasNewValue)(uint16_t value);
-	/*class Callback
-	{
-		public:
-			Callback(CallbackReceiver* target) : m_target(target) {}//, m_callback(callback_function) {}			
-			CallbackReceiver* m_target;
-
-//Callback(void* target, void (*callback_function)(uint16_t value)) : m_target(target), m_callback(callback_function) {}
-//void* m_target;
-//void (*m_callback)(uint16_t value);
-	};
-	*/
-
-	//Callback* OnHasNewValue;
 	CallbackReceiver* m_callbackTarget;
 
 protected:

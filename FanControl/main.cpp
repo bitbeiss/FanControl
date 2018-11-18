@@ -10,7 +10,6 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <util/delay.h>
-//#include <stdio.h>
 
 #include "Port.h"
 #include "LedBarMeter.h"
