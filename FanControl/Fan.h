@@ -10,14 +10,17 @@
 #define __FAN_H__
 
 #include "RotationTachymeter.h"
+#include "ADCInput.h"
 
-class Fan
+class Fan : public ADCInput::CallbackReceiver
 {
 //variables
 public:
 protected:
 private:
 	RotationTachymeter m_tachymeter;
+	uint16_t m_strength;
+	ADCInput m_strengthInput;
 
 //functions
 public:
@@ -26,9 +29,13 @@ public:
 	
 	int GetPulseTimeMicroseconds();
 	int GetRPM(); // measure RPM permanently, cache value
-	//void SetStrength(uint8_t percent);
+	void SetStrength(float percent);
+	
+	void ReceiveADCValue(uint16_t value) override;
+
 protected:
 private:
+	static void ReceiveUserStrengthInput(uint16_t strength);
 	
 
 }; //Fan

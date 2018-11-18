@@ -9,6 +9,7 @@
 #ifndef __ROTATIONTACHYMETER_H__
 #define __ROTATIONTACHYMETER_H__
 
+#include <avr/io.h>
 #include "main.h"
 
 
@@ -29,7 +30,7 @@ private:
 
 //functions
 public:
-	RotationTachymeter();
+	RotationTachymeter(uint8_t interrupt_pin);
 	~RotationTachymeter();
 	
 	int GetPeriodLengthMicroseconds();
@@ -38,7 +39,7 @@ public:
 protected:
 private:
 	void initTimers();
-	void initInterrupts();
+	void initInterrupts(uint8_t interrupt_pin);
 
 }; //RotationTachymeter
 

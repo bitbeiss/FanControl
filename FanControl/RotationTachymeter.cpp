@@ -13,9 +13,9 @@
 volatile int RotationTachymeter::m_timer_value = 0;
 
 // default constructor
-RotationTachymeter::RotationTachymeter()
+RotationTachymeter::RotationTachymeter(uint8_t interrupt_pin)
 {
-	initInterrupts();
+	initInterrupts(interrupt_pin);
 	initTimers();
 } //RotationTachymeter
 
@@ -40,9 +40,9 @@ int RotationTachymeter::GetPeriodLengthMicroseconds() {
 
 
 // PRIVATE functions
-void RotationTachymeter::initInterrupts() {
+void RotationTachymeter::initInterrupts(uint8_t interrupt_pin) {
 	// Global Interrupt Control Register
-	GICR |= (1 << INT0); // configure INT0 (PD2) as active external Interrupt
+	GICR |= (1 << interrupt_pin); // configure INT0 (PD2) as active external Interrupt
 	
 	//MCU Control Register
 	MCUCR |= (1 << ISC01); // trigger Interrupt INT0 on falling edge
