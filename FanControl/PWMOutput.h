@@ -23,7 +23,6 @@ private:
 	volatile uint8_t* m_ddr_addr;
 	volatile uint8_t* m_ocr8bit_addr;
 	volatile uint16_t* m_ocr16bit_addr;
-	//uint16_t m_pwm_base;
 	bool m_use_8bit_timer;
 	
 

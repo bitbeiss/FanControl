@@ -20,19 +20,16 @@ PWMOutput::PWMOutput(uint8_t timer_to_use, PWMPrescaler prescaler)//volatile uin
 			m_ddr_addr = &DDRB;
 			output_pin = PB3;
 			m_ocr8bit_addr = &OCR0;
-			//m_pwm_base = 256;
 			break;
 		case 1:
 			m_ddr_addr = &DDRD;
 			output_pin = PD4; //output_pin = PB5;
 			m_ocr16bit_addr = &OCR1A;
-			//m_pwm_base = 65535;
 			break;
 		case 2:
 			m_ddr_addr = &DDRD;
 			output_pin = PD7;
 			m_ocr8bit_addr = &OCR2;
-			//m_pwm_base = 256;
 			break;
 	}
 	
