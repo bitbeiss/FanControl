@@ -37,24 +37,24 @@ void ADCInput::Start()
 	ADCSRA |= (1 << ADSC); // start ADC
 }
 
-void ADCInput::SetPrescaler(enum ADCPrescaler prescaler)
+void ADCInput::SetPrescaler(ADCPrescaler prescaler)
 {
 	uint8_t numeric_value = 0;
 	
 	switch(prescaler) {
-		case _2:
+		case ADCPrescalers::_2:
 		break;
-		case _4:
+		case ADCPrescalers::_4:
 		numeric_value = 2; break;
-		case _8:
+		case ADCPrescalers::_8:
 		numeric_value = 3; break;
-		case _16:
+		case ADCPrescalers::_16:
 		numeric_value = 4; break;
-		case _32:
+		case ADCPrescalers::_32:
 		numeric_value = 5; break;
-		case _64:
+		case ADCPrescalers::_64:
 		numeric_value = 6; break;
-		case _128:
+		case ADCPrescalers::_128:
 		numeric_value = 7; break;
 	}
 	

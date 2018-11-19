@@ -11,6 +11,7 @@
 
 #include "RotationTachymeter.h"
 #include "ADCInput.h"
+#include "PWMOutput.h"
 
 class Fan : public ADCInput::CallbackReceiver
 {
@@ -19,8 +20,9 @@ public:
 protected:
 private:
 	RotationTachymeter m_tachymeter;
-	uint16_t m_strength;
+	float m_strength;
 	ADCInput m_strengthInput;
+	PWMOutput m_pwmOutput;
 
 //functions
 public:
@@ -35,7 +37,7 @@ public:
 
 protected:
 private:
-	static void ReceiveUserStrengthInput(uint16_t strength);
+	//static void ReceiveUserStrengthInput(uint16_t strength);
 	
 
 }; //Fan

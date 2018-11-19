@@ -29,14 +29,14 @@ public:
 protected:
 private:
 	static ADCInput* s_adcInputs[8];
-	static const uint8_t PRESCALER_MASK = 0x07;
+	static const uint8_t PRESCALER_MASK = ((1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0));
 
 //functions
 public:
 	ADCInput(uint8_t adc_input_pin, CallbackReceiver* target);
 	~ADCInput();
 	
-	void SetPrescaler(enum ADCPrescaler prescaler);
+	void SetPrescaler(ADCPrescaler prescaler);
 	void Start();
 	
 	friend void ADC_vect(void);
