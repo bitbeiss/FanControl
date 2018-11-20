@@ -180,6 +180,12 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="ADCInput.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="ADCInput.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Byte.cpp">
       <SubType>compile</SubType>
     </Compile>
@@ -214,6 +220,15 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Port.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Prescalers.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="PWMOutput.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="PWMOutput.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="RotationTachymeter.cpp">
