@@ -47,7 +47,5 @@ private:
 
 }; //RotationTachymeter
 
-//volatile int RotationTachymeter::m_timer_value = 0;
-
 
 #endif //__ROTATIONTACHYMETER_H__

@@ -40,8 +40,9 @@
         </dependencies>
       </framework-data>
     </AsfFrameworkConfig>
-    <avrtool>com.atmel.avrdbg.tool.jtagice3plus</avrtool>
-    <avrtoolserialnumber>J30200025500</avrtoolserialnumber>
+    <avrtool>com.atmel.avrdbg.tool.simulator</avrtool>
+    <avrtoolserialnumber>
+    </avrtoolserialnumber>
     <avrdeviceexpectedsignature>0x1E9502</avrdeviceexpectedsignature>
     <com_atmel_avrdbg_tool_jtagice3plus>
       <ToolOptions>
@@ -54,7 +55,8 @@
       <ToolNumber>J30200025500</ToolNumber>
       <ToolName>JTAGICE3</ToolName>
     </com_atmel_avrdbg_tool_jtagice3plus>
-    <avrtoolinterface>JTAG</avrtoolinterface>
+    <avrtoolinterface>
+    </avrtoolinterface>
     <avrtoolinterfaceclock>200000</avrtoolinterfaceclock>
     <com_atmel_avrdbg_tool_simulator>
       <ToolOptions>
@@ -191,6 +193,12 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Byte.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="CircularBuffer.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="CircularBuffer.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Fan.cpp">

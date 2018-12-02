@@ -16,6 +16,7 @@
 #include "Byte.h"
 #include "Lcd.h"
 #include "Fan.h"
+#include "CircularBuffer.h";
 
 const long LCD_COUNTER_START = 100000;
 const long LCD_COUNTER_END = 500000;
@@ -62,6 +63,44 @@ void number_to_ascii(long number, char chars[]) {
 
 
 int main(void) {
+	/*
+	uint8_t c_buf_val;
+	
+	CircularBuffer buffer;
+	buffer.Push(0x01);
+	
+	buffer.Pop(&c_buf_val);
+	buffer.Push(0x02);
+	buffer.Push(0x03);
+	buffer.Push(0x04);
+	
+	buffer.Pop(&c_buf_val);
+	buffer.Push(0x05);
+	buffer.Push(0x06);
+	buffer.Push(0x07);
+	buffer.Push(0x08);
+	buffer.Push(0x09);
+	buffer.Push(0x0A);
+	
+	buffer.Pop(&c_buf_val);
+	for(int i = 0; i < 10; ++i) {
+		buffer.Push(0x10);
+	}
+	buffer.Pop(&c_buf_val);
+	buffer.Push(0x0B);
+	
+	buffer.Pop(&c_buf_val);
+	for(int i = 0; i < 10; ++i) {
+		buffer.Push(0x20);
+	}
+	buffer.Pop(&c_buf_val);
+	buffer.Push(0x0C);
+	buffer.Pop(&c_buf_val);
+	for(int i = 0; i < 8; ++i) {
+		buffer.Push(0x30);
+	}
+	*/
+	
 	Fan fan = Fan();
 	sei();
 	
