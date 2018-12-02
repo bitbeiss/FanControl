@@ -57,15 +57,16 @@
     <avrtoolinterface>JTAG</avrtoolinterface>
     <avrtoolinterfaceclock>200000</avrtoolinterfaceclock>
     <com_atmel_avrdbg_tool_simulator>
-      <ToolOptions xmlns="">
+      <ToolOptions>
         <InterfaceProperties>
         </InterfaceProperties>
-        <InterfaceName>JTAG</InterfaceName>
+        <InterfaceName>
+        </InterfaceName>
       </ToolOptions>
-      <ToolType xmlns="">com.atmel.avrdbg.tool.simulator</ToolType>
-      <ToolNumber xmlns="">
+      <ToolType>com.atmel.avrdbg.tool.simulator</ToolType>
+      <ToolNumber>
       </ToolNumber>
-      <ToolName xmlns="">Simulator</ToolName>
+      <ToolName>Simulator</ToolName>
     </com_atmel_avrdbg_tool_simulator>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
@@ -180,6 +181,12 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="ADCInput.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="ADCInput.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Byte.cpp">
       <SubType>compile</SubType>
     </Compile>
@@ -214,6 +221,15 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Port.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Prescalers.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="PWMOutput.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="PWMOutput.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="RotationTachymeter.cpp">

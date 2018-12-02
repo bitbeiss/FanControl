@@ -4,7 +4,7 @@
 *	\author Klemens Svetitsch
 */
 
-#define F_CPU 8000000
+#include "main.h"
 
 #include <avr/io.h>
 #include <util/delay.h>
@@ -109,7 +109,7 @@ void Lcd::send(uint8_t type, uint8_t input, bool long_delay) {
 		this->send8bit(type, input);
 	}
 	
-	//Auf LCD Controller warten
+	// wait for lcd controller to finish operation
 	if (long_delay) {
 		_delay_ms(2);
 	} else {
@@ -151,7 +151,8 @@ void Lcd::init4bit() {
 	
 	// enable 4-bit mode (we are still in 8 bit mode)
 	this->send8bit(COMMAND, 0x02);
-	_delay_ms(2);
+	//_delay_ms(2);
+	_delay_us(50);
 	
 	volatile uint8_t command;
 	
@@ -170,7 +171,7 @@ void Lcd::init4bit() {
 	
 	// return home
 	this->send4bit(COMMAND, 0x02);
-	_delay_ms(2);
+	_delay_us(1700);
 	
 	/*this->send4bit(DATA, 49);
 	_delay_ms(2);*/
@@ -214,5 +215,5 @@ void Lcd::setCursorPosition(int line, uint8_t row)
 // clears the screen
 void Lcd::clearDisplay() {
 	this->send(COMMAND, 0x01);
-	_delay_ms(2);
+	_delay_ms(1);
 }

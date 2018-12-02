@@ -13,12 +13,14 @@
 
 
 ADCInput* ADCInput::s_adcInputs[8];
+volatile uint16_t ADCInput::m_value;
 
 // default constructor
 ADCInput::ADCInput(uint8_t adc_input_pin, CallbackReceiver* target) : m_callbackTarget(target)
 {
 	ADCInput::s_adcInputs[adc_input_pin] = this;
 	DDRA  &= ~(1 << adc_input_pin);
+	ADMUX |= (adc_input_pin & 0x07); // choose the input pin to connect to the ADC
 	ADCSRA |= (1 << ADEN); // enable ADC
 	
 } //ADCInput
@@ -58,7 +60,7 @@ void ADCInput::SetPrescaler(ADCPrescaler prescaler)
 		numeric_value = 7; break;
 	}
 	
-	ADCSRA = (ADCSRA & ~ADCInput::PRESCALER_MASK) | (numeric_value & ADCInput::PRESCALER_MASK);
+	ADCSRA = (ADCSRA & ~ADCInput::PRESCALER_MASK) | ( (numeric_value << 0) & ADCInput::PRESCALER_MASK );
 }
 
 void ADC_vect(void) {
@@ -66,7 +68,8 @@ void ADC_vect(void) {
 
 	ADCInput* adc = ADCInput::s_adcInputs[trigger_pin];
 	if (adc != 0) {
-		adc->m_callbackTarget->ReceiveADCValue((ADCH << 8) | ADCL);
+		ADCInput::m_value = ADCL;
+		ADCInput::m_value |= (ADCH << 8);
+		adc->m_callbackTarget->ReceiveADCValue(ADCInput::m_value);
 	}
-	//ADCSRA |= (1 << ADSC);		// Start Conversion
 }

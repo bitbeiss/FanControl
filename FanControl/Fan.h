@@ -21,7 +21,7 @@ protected:
 private:
 	RotationTachymeter m_tachymeter;
 	float m_strength;
-	ADCInput m_strengthInput;
+	ADCInput m_adcInput;
 	PWMOutput m_pwmOutput;
 
 //functions
@@ -29,9 +29,10 @@ public:
 	Fan();
 	~Fan();
 	
-	int GetPulseTimeMicroseconds();
+	long GetPulseTimeMicroseconds();
 	int GetRPM(); // measure RPM permanently, cache value
 	void SetStrength(float percent);
+	int GetDutyCycle();
 	
 	void ReceiveADCValue(uint16_t value) override;
 

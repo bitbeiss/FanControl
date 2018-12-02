@@ -22,18 +22,19 @@ public:
 	
 //variables
 public:
-	static volatile int m_timer_value;
+	static volatile uint16_t m_timer_value;
 	
 protected:
 private:
-	volatile int m_rpm, m_period_width_us;
+	volatile int m_rpm;
+	volatile long m_period_width_us;
 
 //functions
 public:
 	RotationTachymeter(uint8_t interrupt_pin);
 	~RotationTachymeter();
 	
-	int GetPeriodLengthMicroseconds();
+	long GetPeriodLengthMicroseconds();
 	int GetRPM();
 	
 protected:

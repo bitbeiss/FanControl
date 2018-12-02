@@ -17,12 +17,12 @@ class LedBarMeter{
 		void init();				//!<Set all Pins as output and to value 0
 		void setPort(Port&);
 		Port getPort();
-		void setVoltage(uint8_t);
-		void indicateVoltage();		//!<Show current Voltage on LED indicator
-		void displayVoltage();		//!<Show current Voltage on Lcd display
+		void setValue(uint8_t);
+		void displayValue();		//!<Show current Voltage on LED indicator
+		//void displayVoltage();		//!<Show current Voltage on Lcd display
 
 	private:
-		uint8_t Voltage;
+		uint8_t m_value;
 		Port lbm_Port;
 		
 };

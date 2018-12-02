@@ -20,10 +20,10 @@
 const long LCD_COUNTER_START = 100000;
 const long LCD_COUNTER_END = 500000;
 const int small_delay = 10;
-const int large_delay = 200;
+const int large_delay = 100;
 const int large_delay_steps = large_delay / small_delay;
 
-uint32_t ten_power(int power) {
+inline uint32_t ten_power(int power) {
 	volatile uint32_t out = 1;
 	for(int i = 0; i < power; ++i)
 		out *= 10;
@@ -35,7 +35,12 @@ void number_to_ascii(long number, char chars[]) {
 	if (number < 0) {
 		chars[i++] = '-';
 		number = -number;
+	} else if (number == 0) {
+		chars[0] = 0x30;
+		chars[1] = '\0';
+		return;
 	}
+	
 	volatile uint32_t cmp = 0;
 	volatile uint8_t quot = 0;
 	bool nr_started = false;
@@ -56,42 +61,56 @@ void number_to_ascii(long number, char chars[]) {
 }
 
 
-
-
-
 int main(void) {
 	Fan fan = Fan();
-	
 	sei();
 	
 	
 	Port ledBarPort(&PORTA,&DDRA,&PINA);
-	LedBarMeter ledBarVoltageMeter(ledBarPort);
-	
-	uint8_t voltage=0;
+	LedBarMeter ledBarMeter(ledBarPort);
 	
 	Lcd lcd = Lcd();
 	lcd.init4bit();
 	lcd.setCursorPosition(1, 0);
-	lcd.print("Hello World!");
+	lcd.print("Fan Control");
+	lcd.setCursorPosition(2, 0);
+	lcd.print("ITS uC Labor");
+	_delay_ms(250);
+	
 	int lcd_delay_update_counter = 0;
 	
 	volatile long lcd_counter_output = LCD_COUNTER_START;
 	char counter_output_str[7], pulse_length_us_str[5];
+	char trigger_pin_str[2], adc_output_str[5];
+	int fan_duty_cycle = 0;
+	
+	//uint8_t voltage=0;
 	
     while (1) 
     {
-		ledBarVoltageMeter.setVoltage(voltage);
-		ledBarVoltageMeter.indicateVoltage();
-		voltage += 1;
+		//ledBarVoltageMeter.setVoltage(voltage);
+		//ledBarVoltageMeter.indicateVoltage();
+		//voltage += 1;
 		_delay_ms(small_delay);
-		if (voltage >= 255) voltage=0;
+		//if (voltage >= 255) voltage=0;
 		
+		fan_duty_cycle = fan.GetDutyCycle();
+		ledBarMeter.setValue(fan_duty_cycle * 2.55);
+		ledBarMeter.displayValue();
 		
 		lcd_delay_update_counter++;
 		
 		// print the counter value only every 200ms
 		if (lcd_delay_update_counter >= large_delay_steps) {
+			lcd.clearDisplay();
+			
+			lcd.setCursorPosition(1, 0);
+			lcd.print("Duty Cycle: ");
+			number_to_ascii(fan_duty_cycle, adc_output_str);
+			lcd.print(adc_output_str);
+			lcd.print("%");
+			
+			
 			lcd.setCursorPosition(2, 0);
 			//number_to_ascii(lcd_counter_output, counter_output_str);
 			//lcd.print(counter_output_str);
@@ -117,4 +136,5 @@ int main(void) {
 		}
     }
 }
+
 

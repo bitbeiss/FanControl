@@ -28,6 +28,7 @@ public:
 
 protected:
 private:
+	volatile static uint16_t m_value;
 	static ADCInput* s_adcInputs[8];
 	static const uint8_t PRESCALER_MASK = ((1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0));
 

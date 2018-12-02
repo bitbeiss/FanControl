@@ -44,7 +44,8 @@ PWMOutput::PWMOutput(uint8_t timer_to_use, PWMPrescaler prescaler)//volatile uin
 	
 	TCCR2 |= (1 << COM21); // set non-inverting mode
 	TCCR2 |= (1 << WGM21) | (1 << WGM20); // set fast PWM Mode
-	TCCR2 |= (1 << CS21); // set prescaler to 1
+	//TCCR2 |= (1 << WGM20); // set phase correct PWM Mode
+	//TCCR2 |= (1 << CS21); // set prescaler to 1
 	
 	uint8_t clock_select_numeric;
 	switch(prescaler)
@@ -76,11 +77,11 @@ PWMOutput::~PWMOutput()
 
 
 void PWMOutput::SetDutyCyclePercent(float percent) {
-	percent /= percent;
+	if (percent < 0) percent = 0;
 	
 	if (m_use_8bit_timer) {
-		*m_ocr8bit_addr = percent * 256;
+		*m_ocr8bit_addr = (uint8_t) (percent * 2.55);
 		} else {
-		*m_ocr16bit_addr = percent * 65535;
+		*m_ocr16bit_addr = (uint16_t) (percent * 655.35);
 	}
 }

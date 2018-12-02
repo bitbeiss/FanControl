@@ -10,7 +10,7 @@
 #include <avr/interrupt.h>
 #include "RotationTachymeter.h"
 
-volatile int RotationTachymeter::m_timer_value = 0;
+volatile uint16_t RotationTachymeter::m_timer_value = 0;
 
 // default constructor
 RotationTachymeter::RotationTachymeter(uint8_t interrupt_pin)
@@ -33,7 +33,7 @@ int RotationTachymeter::GetRPM()
 	return this->m_rpm;
 }
 
-int RotationTachymeter::GetPeriodLengthMicroseconds() {
+long RotationTachymeter::GetPeriodLengthMicroseconds() {
 	this->m_period_width_us = RotationTachymeter::PERIOD_WIDTH_MULTIPLIER * RotationTachymeter::m_timer_value;
 	return this->m_period_width_us;
 }

@@ -11,7 +11,7 @@ using namespace std;
 
 LedBarMeter::LedBarMeter(Port& pt){	
 	this->setPort(pt);
-	this->setVoltage(0);
+	this->setValue(0);
 	this->init();			
 }
 
@@ -31,36 +31,36 @@ Port LedBarMeter::getPort() {
 	return this->lbm_Port;
 }
 
-void LedBarMeter::setVoltage(uint8_t voltage) {
-	this->Voltage = voltage;
+void LedBarMeter::setValue(uint8_t value) {
+	this->m_value = value;
 }
 
-void LedBarMeter::indicateVoltage() {
-	if (Voltage < 51){
+void LedBarMeter::displayValue() {
+	if (m_value < 51){
 		this->getPort().delPin(4);
 		this->getPort().delPin(5);
 		this->getPort().delPin(6);
 		this->getPort().delPin(7);
 	}
-	if (Voltage >= 51 && Voltage < 102) {	
+	if (m_value >= 51 && m_value < 102) {	
 		this->getPort().setPin(4);
 		this->getPort().delPin(5);
 		this->getPort().delPin(6);
 		this->getPort().delPin(7);
 	}
-	if (Voltage >= 102 && Voltage < 153) {
+	if (m_value >= 102 && m_value < 153) {
 		this->getPort().setPin(4);
 		this->getPort().setPin(5);
 		this->getPort().delPin(6);
 		this->getPort().delPin(7);
 	}
-	if (Voltage >= 153 && Voltage < 204) {
+	if (m_value >= 153 && m_value < 204) {
 		this->getPort().setPin(4);
 		this->getPort().setPin(5);
 		this->getPort().setPin(6);
 		this->getPort().delPin(7);
 	}
-	if (Voltage >= 204 ) {
+	if (m_value >= 204 ) {
 		this->getPort().setPin(4);
 		this->getPort().setPin(5);
 		this->getPort().setPin(6);
