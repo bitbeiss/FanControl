@@ -12,6 +12,7 @@
 #include <avr/io.h>
 #include "main.h"
 
+extern "C" void INT0_vect(void) __attribute__ ((signal));
 
 class RotationTachymeter
 {
@@ -22,12 +23,12 @@ public:
 	
 //variables
 public:
-	static volatile uint16_t m_timer_value;
 	
 protected:
 private:
 	volatile int m_rpm;
 	volatile long m_period_width_us;
+	static volatile uint16_t m_timer_value;
 
 //functions
 public:
@@ -36,6 +37,8 @@ public:
 	
 	long GetPeriodLengthMicroseconds();
 	int GetRPM();
+	
+	friend void INT0_vect(void);
 	
 protected:
 private:

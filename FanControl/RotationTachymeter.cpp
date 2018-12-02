@@ -57,7 +57,7 @@ void RotationTachymeter::initTimers() {
 
 
 // external interrupt from fan (happens twice per round)
-ISR (INT0_vect) {
+void INT0_vect(void) {
 	RotationTachymeter::m_timer_value = TCNT1;
 	TCNT1 = 0; // reset counter
 }
