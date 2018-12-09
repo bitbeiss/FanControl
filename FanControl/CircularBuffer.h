@@ -15,22 +15,25 @@ class CircularBuffer
 {
 //variables
 public:
-	static const uint8_t BUFFER_SIZE = 32;
-
 protected:
 private:
+	const static uint8_t BUFFER_SIZE = 96;
+
 	uint8_t m_buffer[BUFFER_SIZE];
-	uint8_t m_pRead, m_pWrite;
-	uint8_t m_count;
+	volatile uint8_t m_pRead, m_pWrite;
+	volatile uint8_t m_count;
 
 //functions
 public:
 	CircularBuffer();
 	~CircularBuffer();
 	
+	void SetBufferSize(uint16_t buffer_size);
+	
 	bool Push(uint8_t value);
 	bool Pop(uint8_t* value_ref);
 	void Clear();
+	int GetLoad();
 	
 protected:
 private:

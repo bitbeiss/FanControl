@@ -40,9 +40,8 @@
         </dependencies>
       </framework-data>
     </AsfFrameworkConfig>
-    <avrtool>com.atmel.avrdbg.tool.simulator</avrtool>
-    <avrtoolserialnumber>
-    </avrtoolserialnumber>
+    <avrtool>com.atmel.avrdbg.tool.jtagice3plus</avrtool>
+    <avrtoolserialnumber>J30200025500</avrtoolserialnumber>
     <avrdeviceexpectedsignature>0x1E9502</avrdeviceexpectedsignature>
     <com_atmel_avrdbg_tool_jtagice3plus>
       <ToolOptions>
@@ -55,8 +54,7 @@
       <ToolNumber>J30200025500</ToolNumber>
       <ToolName>JTAGICE3</ToolName>
     </com_atmel_avrdbg_tool_jtagice3plus>
-    <avrtoolinterface>
-    </avrtoolinterface>
+    <avrtoolinterface>JTAG</avrtoolinterface>
     <avrtoolinterfaceclock>200000</avrtoolinterfaceclock>
     <com_atmel_avrdbg_tool_simulator>
       <ToolOptions>
@@ -189,6 +187,9 @@
     <Compile Include="ADCInput.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="BaudRates.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Byte.cpp">
       <SubType>compile</SubType>
     </Compile>
@@ -244,6 +245,12 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="RotationTachymeter.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="UsartController.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="UsartController.h">
       <SubType>compile</SubType>
     </Compile>
   </ItemGroup>

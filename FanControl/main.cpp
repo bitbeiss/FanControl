@@ -16,97 +16,78 @@
 #include "Byte.h"
 #include "Lcd.h"
 #include "Fan.h"
-#include "CircularBuffer.h";
+#include "CircularBuffer.h"
+#include "UsartController.h"
+#include "BaudRates.h"
 
 const long LCD_COUNTER_START = 100000;
 const long LCD_COUNTER_END = 500000;
 const int small_delay = 10;
-const int large_delay = 100;
+const int large_delay = 60;
 const int large_delay_steps = large_delay / small_delay;
+
 
 inline uint32_t ten_power(int power) {
 	volatile uint32_t out = 1;
 	for(int i = 0; i < power; ++i)
-		out *= 10;
+	out *= 10;
 	return out;
 }
 
-void number_to_ascii(long number, char chars[]) {
+
+void number_to_ascii(long number, char chars[], int padding_left) {
 	int i = 0;
-	if (number < 0) {
-		chars[i++] = '-';
-		number = -number;
-	} else if (number == 0) {
-		chars[0] = 0x30;
-		chars[1] = '\0';
-		return;
-	}
 	
-	volatile uint32_t cmp = 0;
-	volatile uint8_t quot = 0;
-	bool nr_started = false;
-	
-	for(int pot = 9; pot >= 0; pot--) {
-		cmp = ten_power(pot);
-		if ((quot = number / cmp) > 0) {
-			nr_started = true;
-			number -= cmp * quot;
-			chars[i] = quot + 0x30;
-		} else if (nr_started) {
-			chars[i] = 0x30;
+	if (number == 0) {
+		chars[i++] = 0x30;
+	} else {
+		if (number < 0) {
+			chars[i++] = '-';
+			number = -number;
 		}
-		if (nr_started)
+		
+		volatile uint32_t cmp = 0;
+		volatile uint8_t quot = 0;
+		bool nr_started = false;
+		
+		for(int pot = 9; pot >= 0; pot--) {
+			cmp = ten_power(pot);
+			if ((quot = number / cmp) > 0) {
+				nr_started = true;
+				number -= cmp * quot;
+				chars[i] = quot + 0x30;
+				} else if (nr_started) {
+				chars[i] = 0x30;
+			}
+			if (nr_started)
 			++i;
+		}
+		
 	}
+	
 	chars[i] = '\0';
+	
+	if (padding_left > i) {
+		int diff = padding_left - i;
+		for(int x = i; x >= 0; x--) {
+			chars[x + diff] = chars[x];
+		}
+		for(int x = diff-1; x >= 0; x--) {
+			chars[x] = ' ';
+		}
+	}
 }
 
 
-int main(void) {
-	/*
-	uint8_t c_buf_val;
-	
-	CircularBuffer buffer;
-	buffer.Push(0x01);
-	
-	buffer.Pop(&c_buf_val);
-	buffer.Push(0x02);
-	buffer.Push(0x03);
-	buffer.Push(0x04);
-	
-	buffer.Pop(&c_buf_val);
-	buffer.Push(0x05);
-	buffer.Push(0x06);
-	buffer.Push(0x07);
-	buffer.Push(0x08);
-	buffer.Push(0x09);
-	buffer.Push(0x0A);
-	
-	buffer.Pop(&c_buf_val);
-	for(int i = 0; i < 10; ++i) {
-		buffer.Push(0x10);
-	}
-	buffer.Pop(&c_buf_val);
-	buffer.Push(0x0B);
-	
-	buffer.Pop(&c_buf_val);
-	for(int i = 0; i < 10; ++i) {
-		buffer.Push(0x20);
-	}
-	buffer.Pop(&c_buf_val);
-	buffer.Push(0x0C);
-	buffer.Pop(&c_buf_val);
-	for(int i = 0; i < 8; ++i) {
-		buffer.Push(0x30);
-	}
-	*/
-	
+int main(void)
+{	
+	UsartController serial_controller = UsartController(BaudRates::_9600, false, true);
 	Fan fan = Fan();
 	sei();
 	
 	
 	Port ledBarPort(&PORTA,&DDRA,&PINA);
-	LedBarMeter ledBarMeter(ledBarPort);
+	LedBarMeter ledBarMeter(ledBarPort); 
 	
 	Lcd lcd = Lcd();
 	lcd.init4bit();
@@ -115,6 +96,7 @@ int main(void) {
 	lcd.setCursorPosition(2, 0);
 	lcd.print("ITS uC Labor");
 	_delay_ms(250);
+	lcd.clearDisplay();
 	
 	int lcd_delay_update_counter = 0;
 	
@@ -124,6 +106,15 @@ int main(void) {
 	int fan_duty_cycle = 0;
 	
 	//uint8_t voltage=0;
+	
+	serial_controller.Transmit("\e[1A\r\n");
+	serial_controller.Transmit("\e[38;5;196m");
+	serial_controller.Transmit("ITS uC Labor\r\n");
+	serial_controller.Transmit("Fan Controller\r\n");
+	serial_controller.Transmit(" Duty  | Pulse Time |  RPM  \r\n");
+	serial_controller.Transmit("\r\n");
+	serial_controller.Transmit("\e[38;5;255m");
+	
 	
     while (1) 
     {
@@ -141,13 +132,17 @@ int main(void) {
 		
 		// print the counter value only every 200ms
 		if (lcd_delay_update_counter >= large_delay_steps) {
-			lcd.clearDisplay();
+			//lcd.clearDisplay();
 			
 			lcd.setCursorPosition(1, 0);
 			lcd.print("Duty Cycle: ");
-			number_to_ascii(fan_duty_cycle, adc_output_str);
+			number_to_ascii(fan_duty_cycle, adc_output_str, 3);
 			lcd.print(adc_output_str);
 			lcd.print("%");
+			
+			serial_controller.Transmit("\e[1A ");
+			serial_controller.Transmit(adc_output_str);
+			serial_controller.Transmit("%  ");
 			
 			
 			lcd.setCursorPosition(2, 0);
@@ -155,15 +150,24 @@ int main(void) {
 			//lcd.print(counter_output_str);
 			
 			//number_to_ascii(pulse_cnt>>1, counter_output_str);
-			number_to_ascii(fan.GetPulseTimeMicroseconds(), pulse_length_us_str);
+			number_to_ascii(fan.GetPulseTimeMicroseconds(), pulse_length_us_str, 5);
 			lcd.print(pulse_length_us_str);
 			lcd.print("us");
-			
 			lcd.print(" ");
 			
-			number_to_ascii(fan.GetRPM(), pulse_length_us_str);
+			serial_controller.Transmit("|   ");
+			serial_controller.Transmit(pulse_length_us_str);
+			serial_controller.Transmit("us");
+			serial_controller.Transmit("  ");
+			
+			number_to_ascii(fan.GetRPM(), pulse_length_us_str, 4);
 			lcd.print(pulse_length_us_str);
 			lcd.print("rpm");
+			
+			
+			serial_controller.Transmit("| ");
+			serial_controller.Transmit(pulse_length_us_str);
+			serial_controller.Transmit("     \r\n");
 			
 			lcd_counter_output += 1000;
 			lcd_delay_update_counter = 0;

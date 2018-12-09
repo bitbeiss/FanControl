@@ -8,10 +8,13 @@
 
 #include "CircularBuffer.h"
 
+
 // default constructor
 CircularBuffer::CircularBuffer()
 {
+
 } //CircularBuffer
+
 
 // default destructor
 CircularBuffer::~CircularBuffer()
@@ -42,7 +45,7 @@ bool CircularBuffer::Pop(uint8_t* value_ref)
 	*value_ref = m_buffer[m_pRead++];
 	m_count--;
 	
-	if (m_pRead >= BUFFER_SIZE)
+	if (m_pRead >= CircularBuffer::BUFFER_SIZE)
 		m_pRead = 0;
 		
 	return true;
@@ -54,4 +57,9 @@ void CircularBuffer::Clear()
 		m_buffer[i] = 0;
 	}
 	m_pRead = m_pWrite = 0;
+}
+
+int CircularBuffer::GetLoad()
+{
+	return m_count;
 }

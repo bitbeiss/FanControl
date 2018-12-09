@@ -10,16 +10,16 @@
 #define PRESCALERS_H_
 
 namespace ADCPrescalers {
-	enum _enum { _2, _4, _8, _16, _32, _64, _128 };
+	enum _adc_prescaler_enum { _2, _4, _8, _16, _32, _64, _128 };
 }
-typedef ADCPrescalers::_enum ADCPrescaler;
+typedef ADCPrescalers::_adc_prescaler_enum ADCPrescaler;
 
 
 
 namespace PWMPrescalers {
-	enum _enum { _stop, _1, _8, _32, _64, _128, _256, _1024 };
+	enum _pwm_prescaler_enum { _stop, _1, _8, _32, _64, _128, _256, _1024 };
 }
-typedef PWMPrescalers::_enum PWMPrescaler;
+typedef PWMPrescalers::_pwm_prescaler_enum PWMPrescaler;
 
 
 

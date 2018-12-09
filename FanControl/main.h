@@ -5,5 +5,11 @@
  *  Author: filmu
  */ 
 
-#pragma once
+#ifndef __MAIN_H__
+#define __MAIN_H__
+
+#include <avr/io.h>
+
 #define F_CPU 8000000
+
+#endif //__MAIN_H__

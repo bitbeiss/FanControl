@@ -40,12 +40,9 @@ public:
 	void SetPrescaler(ADCPrescaler prescaler);
 	void Start();
 	
-	friend void ADC_vect(void);
-	
-	
-	
 protected:
 private:
+	friend void ADC_vect(void);
 
 }; //ADCInput
 	
