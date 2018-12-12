@@ -81,7 +81,8 @@ void number_to_ascii(long number, char chars[], int padding_left) {
 
 int main(void)
 {	
-	UsartController serial_controller = UsartController(BaudRates::_9600, false, true);
+	DDRA |= (1 << PA2);
+	UsartController serial_controller = UsartController(BaudRates::_9600, true, true);
 	Fan fan = Fan();
 	sei();
 	
@@ -107,13 +108,13 @@ int main(void)
 	
 	//uint8_t voltage=0;
 	
-	serial_controller.Transmit("\e[1A\r\n");
-	serial_controller.Transmit("\e[38;5;196m");
+	//serial_controller.Transmit("\e[1A\r\n");
+	//serial_controller.Transmit("\e[38;5;196m");
 	serial_controller.Transmit("ITS uC Labor\r\n");
 	serial_controller.Transmit("Fan Controller\r\n");
 	serial_controller.Transmit(" Duty  | Pulse Time |  RPM  \r\n");
 	serial_controller.Transmit("\r\n");
-	serial_controller.Transmit("\e[38;5;255m");
+	//serial_controller.Transmit("\e[38;5;255m");
 	
 	
     while (1) 
@@ -140,7 +141,7 @@ int main(void)
 			lcd.print(adc_output_str);
 			lcd.print("%");
 			
-			serial_controller.Transmit("\e[1A ");
+			//serial_controller.Transmit("\e[1A ");
 			serial_controller.Transmit(adc_output_str);
 			serial_controller.Transmit("%  ");
 			
@@ -171,6 +172,10 @@ int main(void)
 			
 			lcd_counter_output += 1000;
 			lcd_delay_update_counter = 0;
+			
+			uint8_t receive_buf_len = serial_controller.GetReceiveBufferLength();
+			uint8_t receive_buf[receive_buf_len];
+			serial_controller.GetReceiveData(receive_buf);
 		}
 		
 		// reset the output to 100,000 once it has reached 500,000

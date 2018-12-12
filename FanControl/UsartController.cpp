@@ -7,6 +7,7 @@
 
 #include "main.h"
 
+#include <avr/delay.h>
 #include <avr/io.h>
 #include "UsartController.h"
 #include "CircularBuffer.h"
@@ -15,7 +16,8 @@
 #define UBRR(baud) ((F_CPU)/(baud*16UL)-1)
 
 
-	CircularBuffer UsartController::s_buffer;
+CircularBuffer UsartController::s_transmit_buffer;
+CircularBuffer UsartController::s_receive_buffer;
 volatile uint8_t UsartController::s_char_buffer = 0;
 
 
@@ -101,7 +103,7 @@ void UsartController::SetBaudrate(BaudRate baudrate)
 void UsartController::Transmit(char data_tx[])
 {
 	for(int pos = 0; data_tx[pos] != '\0'; pos++) {
-		UsartController::s_buffer.Push(data_tx[pos]);
+		UsartController::s_transmit_buffer.Push(data_tx[pos]);
 	}
 	
 	// if the current transmit buffer is empty the transmit interrupt will not be called automatically, trigger it manually
@@ -110,15 +112,31 @@ void UsartController::Transmit(char data_tx[])
 	}
 }
 
+uint8_t UsartController::GetReceiveBufferLength() {
+	return UsartController::s_receive_buffer.GetLoad();
+}
+
+void UsartController::GetReceiveData(uint8_t* out_data)
+{
+	uint8_t char_buffer;
+	while (UsartController::s_receive_buffer.Pop(&char_buffer)) {
+		*(out_data++) = char_buffer;
+	}
+}
+
+uint8_t c_char_buffer;
+
 void USART_TXC_vect(void) {
 	//UDR = ch++;
-	uint8_t c_buffer;
+	
 	//if (UsartController::s_buffer.Pop(const_cast<uint8_t*>(&UsartController::s_char_buffer))) {
-	if (UsartController::s_buffer.Pop(&c_buffer)) {
-		UDR = c_buffer;
+	if (UsartController::s_transmit_buffer.Pop(&c_char_buffer)) {
+		UDR = c_char_buffer;
 	}
 }
 
 void USART_RXC_vect(void) {
-	
+	PORTA ^= (1 << PA2);
+	c_char_buffer = UDR;
+	UsartController::s_receive_buffer.Push(c_char_buffer);
 }

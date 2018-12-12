@@ -23,7 +23,8 @@ class UsartController
 public:
 protected:
 private:
-	static CircularBuffer s_buffer;
+	static CircularBuffer s_transmit_buffer;
+	static CircularBuffer s_receive_buffer;
 	static volatile uint8_t s_char_buffer;
 
 //functions
@@ -33,6 +34,9 @@ public:
 	
 	void SetBaudrate(BaudRate baudrate);
 	void Transmit(char data_tx[]);
+	
+	uint8_t GetReceiveBufferLength();
+	void GetReceiveData(uint8_t* out_data);
 	//void SetReceiver(UsartReceiver receiver);
 	
 protected:
