@@ -76,12 +76,12 @@ PWMOutput::~PWMOutput()
 } //~PWMOutput
 
 
-void PWMOutput::SetDutyCyclePercent(float percent) {
-	if (percent < 0) percent = 0;
+void PWMOutput::SetDutyCycle(uint8_t value) {
+	//if (value < 0) value = 0;
 	
 	if (m_use_8bit_timer) {
-		*m_ocr8bit_addr = (uint8_t) (percent * 2.55);
+		*m_ocr8bit_addr = (uint8_t) (value);
 		} else {
-		*m_ocr16bit_addr = (uint16_t) (percent * 655.35);
+		*m_ocr16bit_addr = (uint16_t) (value * 256);
 	}
 }

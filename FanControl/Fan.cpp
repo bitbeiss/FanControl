@@ -39,16 +39,18 @@ long Fan::GetPulseTimeMicroseconds() {
 int Fan::GetRPM() {
 	return m_tachymeter.GetRPM();
 }
-void Fan::SetStrength(float percent) {
-	m_pwmOutput.SetDutyCyclePercent(percent);
+void Fan::SetStrength(uint8_t value) {
+	m_pwmOutput.SetDutyCycle(value);
 }
+
+//
 int Fan::GetDutyCycle() {
-	return (int) (m_strength * 100);
+	return m_strength;
 }
 
 void Fan::ReceiveADCValue(uint16_t value)
 {
 	// value coming in is in 10bit, so we divide by 1023 and multiply by 100 to get percent
-	m_strength = value / 1023.0;
-	this->SetStrength(m_strength * 100);
+	m_strength = (uint8_t) (value >> 2); // number between 0 and 255
+	this->SetStrength(m_strength);
 }

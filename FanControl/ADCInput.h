@@ -44,6 +44,8 @@ protected:
 private:
 	friend void ADC_vect(void);
 
+public:
+	const static uint16_t MAX_VALUE = 1023;
 }; //ADCInput
 	
 	

@@ -20,9 +20,12 @@ public:
 protected:
 private:
 	RotationTachymeter m_tachymeter;
-	float m_strength;
+	uint8_t m_strength;
 	ADCInput m_adcInput;
 	PWMOutput m_pwmOutput;
+	
+	//const static uint8_t ADC_INPUT_DIVIDER = ADCInput::MAX_VALUE >> 2;
+	const static uint8_t ADC_INPUT_DIVIDER = 4;
 
 //functions
 public:
@@ -31,7 +34,7 @@ public:
 	
 	long GetPulseTimeMicroseconds();
 	int GetRPM(); // measure RPM permanently, cache value
-	void SetStrength(float percent);
+	void SetStrength(uint8_t value);
 	int GetDutyCycle();
 	
 	void ReceiveADCValue(uint16_t value) override;

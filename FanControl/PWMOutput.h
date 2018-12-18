@@ -31,7 +31,7 @@ public:
 	PWMOutput(uint8_t timer_to_use, PWMPrescaler prescaler);
 	~PWMOutput();
 	
-	void SetDutyCyclePercent(float percent);
+	void SetDutyCycle(uint8_t value);
 protected:
 private:
 

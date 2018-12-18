@@ -62,7 +62,6 @@ void number_to_ascii(long number, char chars[], int padding_left) {
 			if (nr_started)
 			++i;
 		}
-		
 	}
 	
 	chars[i] = '\0';
@@ -104,9 +103,7 @@ int main(void)
 	volatile long lcd_counter_output = LCD_COUNTER_START;
 	char counter_output_str[7], pulse_length_us_str[5];
 	char trigger_pin_str[2], adc_output_str[5];
-	int fan_duty_cycle = 0;
-	
-	//uint8_t voltage=0;
+	uint16_t fan_duty_cycle = 0;
 	
 	//serial_controller.Transmit("\e[1A\r\n");
 	//serial_controller.Transmit("\e[38;5;196m");
@@ -119,15 +116,14 @@ int main(void)
 	
     while (1) 
     {
-		//ledBarVoltageMeter.setVoltage(voltage);
-		//ledBarVoltageMeter.indicateVoltage();
-		//voltage += 1;
 		_delay_ms(small_delay);
-		//if (voltage >= 255) voltage=0;
 		
-		fan_duty_cycle = fan.GetDutyCycle();
-		ledBarMeter.setValue(fan_duty_cycle * 2.55);
+		fan_duty_cycle = fan.GetDutyCycle(); // returns number between 0 and 255
+		ledBarMeter.setValue(fan_duty_cycle);
 		ledBarMeter.displayValue();
+		fan_duty_cycle = (fan_duty_cycle * 40) / 100;
+		if (fan_duty_cycle > 100) fan_duty_cycle = 100;
+		
 		
 		lcd_delay_update_counter++;
 		
@@ -136,7 +132,7 @@ int main(void)
 			//lcd.clearDisplay();
 			
 			lcd.setCursorPosition(1, 0);
-			lcd.print("Duty Cycle: ");
+			lcd.print("Fan: ");
 			number_to_ascii(fan_duty_cycle, adc_output_str, 3);
 			lcd.print(adc_output_str);
 			lcd.print("%");
@@ -170,17 +166,20 @@ int main(void)
 			serial_controller.Transmit(pulse_length_us_str);
 			serial_controller.Transmit("     \r\n");
 			
-			lcd_counter_output += 1000;
 			lcd_delay_update_counter = 0;
 			
 			uint8_t receive_buf_len = serial_controller.GetReceiveBufferLength();
-			uint8_t receive_buf[receive_buf_len];
-			serial_controller.GetReceiveData(receive_buf);
-		}
-		
-		// reset the output to 100,000 once it has reached 500,000
-		if (lcd_counter_output >= LCD_COUNTER_END) {
-			lcd_counter_output = LCD_COUNTER_START;
+			
+			if (receive_buf_len > 0) {
+				uint8_t receive_buf[receive_buf_len];
+				serial_controller.GetReceiveData(receive_buf);
+			
+				//serial_controller.Transmit((char *)receive_buf);
+				//serial_controller.Transmit("\r\n");
+				
+				//lcd.setCursorPosition(0, 10);
+				//lcd.print((char *)receive_buf);
+			}
 		}
     }
 }
