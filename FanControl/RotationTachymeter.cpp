@@ -27,13 +27,13 @@ RotationTachymeter::~RotationTachymeter()
 
 
 // PUBLIC functions
-int RotationTachymeter::GetRPM()
+int RotationTachymeter::GetRotationSpeedInRoundsPerMinute()
 {
 	this->m_rpm = RotationTachymeter::RPM_MULTIPLIER / RotationTachymeter::m_timer_value;
 	return this->m_rpm;
 }
 
-long RotationTachymeter::GetPeriodLengthMicroseconds() {
+long RotationTachymeter::GetRotationPeriodLengthInMicroseconds() {
 	this->m_period_width_us = RotationTachymeter::PERIOD_WIDTH_MULTIPLIER * RotationTachymeter::m_timer_value;
 	return this->m_period_width_us;
 }
@@ -56,7 +56,7 @@ void RotationTachymeter::initTimers() {
 }
 
 
-// external interrupt from fan (happens twice per round)
+// external interrupt from fan (called twice per round)
 void INT0_vect(void) {
 	RotationTachymeter::m_timer_value = TCNT1;
 	TCNT1 = 0; // reset counter

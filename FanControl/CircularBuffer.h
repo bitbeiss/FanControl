@@ -1,8 +1,7 @@
-/* 
-* CircularBuffer.h
-*
-* Created: 2.12.18 13:39:15
-* Author: filmu
+/*! \class CircularBuffer
+*	\author Clemens J. Zuzan
+*	\author Klemens Svetitsch
+*	\brief
 */
 
 
@@ -28,12 +27,12 @@ public:
 	CircularBuffer();
 	~CircularBuffer();
 	
-	void SetBufferSize(uint16_t buffer_size);
+	//void SetBufferSize(uint16_t buffer_size);
 	
-	bool Push(uint8_t value);
-	bool Pop(uint8_t* value_ref);
-	void Clear();
-	int GetLoad();
+	bool Push(uint8_t value); // adds a new element at the end of the buffer
+	bool Pop(uint8_t* value_ref); // returns the first element in the buffer and removes it
+	void Clear(); // empties the buffer
+	int GetLoad(); // returns the number of elements currently contained in the buffer
 	
 protected:
 private:

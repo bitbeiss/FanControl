@@ -99,16 +99,16 @@
 #define LCD_SECOND_LINE_START_ADDRESS	0x40
 
 
-class Lcd{
+class Lcd {
 	public:
 		Lcd();
-		void init4bit();
-		void init8bit();
-		void print(char*);
-		void setCursorPosition(int line, uint8_t row);
-		void send(uint8_t type, uint8_t input);
-		void send(uint8_t type, uint8_t input, bool long_delay);
-		void clearDisplay();
+		void Init4bit();
+		// void Init8bit(); // we do not support 8 bit mode
+		void Print(const char* text);
+		void SetCursorPosition(uint8_t line, uint8_t row);
+		void Send(uint8_t type, uint8_t input);
+		void Send(uint8_t type, uint8_t input, bool long_delay); // sends one byte and then waits either a long (2ms) or short (50us)
+		void ClearDisplay();
 		
 	private:
 		Port mLcdPort;
@@ -117,10 +117,10 @@ class Lcd{
 		// because it is unlikely that the pin connections will be changed during runtime
 		
 		#ifdef _FOURBITMODE
-		const bool mUseFourBitMode{true};
+		const bool mUseFourBitMode = true;
 		
 		#elif _EIGHTBITMODE
-		const bool mUseFourBitMode{false};
+		const bool mUseFourBitMode = false;
 		
 		#endif
 		
@@ -135,10 +135,10 @@ class Lcd{
 			
 		
 		// send Enable Pulse
-		void inline enPulse();
+		void inline sendEnablePulse();
 		void inline setRegisterSelectPin(uint8_t type);
 		
-		void configure(uint8_t,uint8_t);
+		//void configure(uint8_t,uint8_t);
 		
 		void send4bit(uint8_t type, uint8_t input);
 		void send8bit(uint8_t type, uint8_t input);

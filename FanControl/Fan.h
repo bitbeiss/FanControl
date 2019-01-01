@@ -1,8 +1,7 @@
-/* 
-* Fan.h
-*
-* Created: 13.11.18 09:52:02
-* Author: filmu
+/*! \class Fan
+*	\author Clemens J. Zuzan
+*	\author Klemens Svetitsch
+*	\brief
 */
 
 
@@ -25,19 +24,19 @@ private:
 	PWMOutput m_pwmOutput;
 	
 	//const static uint8_t ADC_INPUT_DIVIDER = ADCInput::MAX_VALUE >> 2;
-	const static uint8_t ADC_INPUT_DIVIDER = 4;
+	//const static uint8_t ADC_INPUT_DIVIDER = 4;
 
 //functions
 public:
 	Fan();
 	~Fan();
 	
-	long GetPulseTimeMicroseconds();
-	int GetRPM(); // measure RPM permanently, cache value
-	void SetStrength(uint8_t value);
-	int GetDutyCycle();
+	long GetFanRevolutionPeriodInMicroseconds();
+	int GetFanSpeedInRoundsPerMinute(); // returns the turning speed of the fan in whole rounds per minutes
+	void SetSpeed(uint8_t value); // set the speed at which the fan should turn as a unitless value between 0 and 255
+	uint8_t GetFanSpeedAsSingleByte();
 	
-	void ReceiveADCValue(uint16_t value) override;
+	void ReceiveADCValue(uint16_t value); // override
 
 protected:
 private:

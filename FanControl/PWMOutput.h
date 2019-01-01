@@ -1,8 +1,7 @@
-/* 
-* PWMOutput.h
-*
-* Created: 19.11.18 20:53:07
-* Author: filmu
+/*! \class PWMOutput
+*	\author Clemens J. Zuzan
+*	\author Klemens Svetitsch
+*	\brief
 */
 
 
@@ -31,7 +30,7 @@ public:
 	PWMOutput(uint8_t timer_to_use, PWMPrescaler prescaler);
 	~PWMOutput();
 	
-	void SetDutyCycle(uint8_t value);
+	void SetOutputValue(uint8_t value); // sets the value output as a PWM signal on the pin
 protected:
 private:
 

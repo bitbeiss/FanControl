@@ -1,8 +1,7 @@
-/* 
-* UsartController.h
-*
-* Created: 9.12.18 14:29:30
-* Author: filmu
+/*! \class UsartController
+*	\author Clemens J. Zuzan
+*	\author Klemens Svetitsch
+*	\brief
 */
 
 
@@ -33,7 +32,7 @@ public:
 	~UsartController();
 	
 	void SetBaudrate(BaudRate baudrate);
-	void Transmit(char data_tx[]);
+	void Transmit(const char data_tx[]);
 	
 	uint8_t GetReceiveBufferLength();
 	void GetReceiveData(uint8_t* out_data);

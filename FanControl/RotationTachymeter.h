@@ -1,8 +1,7 @@
-/* 
-* RotationTachymeter.h
-*
-* Created: 13.11.18 10:01:47
-* Author: filmu
+/*! \class RotationTachymeter
+*	\author Clemens J. Zuzan
+*	\author Klemens Svetitsch
+*	\brief
 */
 
 
@@ -35,8 +34,8 @@ public:
 	RotationTachymeter(uint8_t interrupt_pin);
 	~RotationTachymeter();
 	
-	long GetPeriodLengthMicroseconds();
-	int GetRPM();
+	long GetRotationPeriodLengthInMicroseconds();
+	int GetRotationSpeedInRoundsPerMinute();
 	
 	friend void INT0_vect(void);
 	

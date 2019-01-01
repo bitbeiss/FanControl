@@ -7,7 +7,7 @@
 
 #include "main.h"
 
-#include <avr/delay.h>
+#include <util/delay.h>
 #include <avr/io.h>
 #include "UsartController.h"
 #include "CircularBuffer.h"
@@ -21,7 +21,9 @@ CircularBuffer UsartController::s_receive_buffer;
 volatile uint8_t UsartController::s_char_buffer = 0;
 
 
-// default constructor
+// creates a default controller for reading and writing data via USART
+// by default the controller does not allow settings for number of data bits, stop bits and parity
+// default values are parity: none, stop-bits: 1, data-bits: 8
 UsartController::UsartController(BaudRate baudrate, bool receive, bool transmit)
 {
 	SetBaudrate(baudrate);
@@ -100,7 +102,8 @@ void UsartController::SetBaudrate(BaudRate baudrate)
 }
 
 
-void UsartController::Transmit(char data_tx[])
+// push the passed string data into a ring buffer and transmit the data as fast as possible
+void UsartController::Transmit(const char data_tx[])
 {
 	for(int pos = 0; data_tx[pos] != '\0'; pos++) {
 		UsartController::s_transmit_buffer.Push(data_tx[pos]);

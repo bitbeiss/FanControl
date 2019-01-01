@@ -1,8 +1,7 @@
-/* 
-* ADCInput.h
-*
-* Created: 18.11.18 19:18:47
-* Author: filmu
+/*! \class ADCInput
+*	\author Clemens J. Zuzan
+*	\author Klemens Svetitsch
+*	\brief 
 */
 
 
@@ -38,7 +37,7 @@ public:
 	~ADCInput();
 	
 	void SetPrescaler(ADCPrescaler prescaler);
-	void Start();
+	void StartFreeRunningConversion();
 	
 protected:
 private:

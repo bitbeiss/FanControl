@@ -1,5 +1,5 @@
 ﻿/*! \file Lcd.cpp
-*	\brief Implemenation of Lcd class. 
+*	\brief Implementation of Lcd class. 
 *	\author Clemens J. Zuzan
 *	\author Klemens Svetitsch
 */
@@ -43,7 +43,7 @@ void Lcd::send8bit(uint8_t type, uint8_t input) {
 	}
 	
 	//latch
-	this->enPulse();
+	this->sendEnablePulse();
 }
 
 void Lcd::send4bit(uint8_t type, uint8_t input) {
@@ -64,7 +64,7 @@ void Lcd::send4bit(uint8_t type, uint8_t input) {
 	}
 	
 	// latch
-	this->enPulse();
+	this->sendEnablePulse();
 	
 	// send lower nibble
 	for(int i = 0; i <= 3; i++) {
@@ -79,7 +79,7 @@ void Lcd::send4bit(uint8_t type, uint8_t input) {
 	}
 	
 	// latch
-	this->enPulse();
+	this->sendEnablePulse();
 }
 
 void inline Lcd::setRegisterSelectPin(uint8_t type) {
@@ -93,13 +93,13 @@ void inline Lcd::setRegisterSelectPin(uint8_t type) {
 	}
 }
 
-// sends a command or data to the HD44780 LCD display
-void Lcd::send(uint8_t type, uint8_t input) {
-	this->send(type, input, false);
+// sends a command or data to the HD44780 LCD display and waits 50us afterwards
+void Lcd::Send(uint8_t type, uint8_t input) {
+	this->Send(type, input, false);
 }
 
-// sends a command or data to the HD44780 LCD display
-void Lcd::send(uint8_t type, uint8_t input, bool long_delay) {
+// sends a command or data to the HD44780 LCD display and then adds either a long (2ms) or short delay (50us)
+void Lcd::Send(uint8_t type, uint8_t input, bool long_delay) {
 		
 	// if we are working in 4-bit mode we need to send the upper nibble now
 	// otherwise we set all of the pins and send then
@@ -117,16 +117,16 @@ void Lcd::send(uint8_t type, uint8_t input, bool long_delay) {
 	}
 }
 
-void Lcd::print(char* text) {
-	// retrieve single characters from text and send these.
+void Lcd::Print(const char* text) {
+	// retrieve single characters from text and send them
 	
 	for(int pos = 0; text[pos] != '\0'; pos++) {
-		this->send(DATA, text[pos], false);
+		this->Send(DATA, text[pos], false);
 	}
 }
 
 // send Enable Pulse
-void inline Lcd::enPulse() {
+void inline Lcd::sendEnablePulse() {
 	this->mLcdPort.setPin(LCD_PIN_E);
 	_delay_us(50);
 	this->mLcdPort.delPin(LCD_PIN_E);
@@ -134,7 +134,7 @@ void inline Lcd::enPulse() {
 }
 
 
-void Lcd::init4bit() {
+void Lcd::Init4bit() {
 	*(this->mLcdPort.getAddress()) = 0x00;
 	
 	// wait for some time, according to data sheet
@@ -167,7 +167,7 @@ void Lcd::init4bit() {
 	this->send4bit(COMMAND, command);
 	_delay_us(40);
 	
-	this->clearDisplay();
+	this->ClearDisplay();
 	
 	// return home
 	this->send4bit(COMMAND, 0x02);
@@ -177,7 +177,7 @@ void Lcd::init4bit() {
 	_delay_ms(2);*/
 }
 
-void Lcd::init8bit() {
+/*void Lcd::Init8bit() {
 	_delay_us(15);
 	this->send8bit(COMMAND,0x2C);
 	this->enPulse();
@@ -189,14 +189,13 @@ void Lcd::init8bit() {
 	this->enPulse();
 	this->send8bit(COMMAND,0x2);
 	this->enPulse();
-}
+}*/
 
-void Lcd::configure(uint8_t type, uint8_t lcd_cmd) {
-}
-
+//void Lcd::configure(uint8_t type, uint8_t lcd_cmd) {}
 
 
-void Lcd::setCursorPosition(int line, uint8_t row)
+// sets the cursor position to the given line and row
+void Lcd::SetCursorPosition(uint8_t line, uint8_t row)
 {
 	if (row >= 40) row %= 40;
 	
@@ -208,12 +207,12 @@ void Lcd::setCursorPosition(int line, uint8_t row)
 		command |= LCD_FIRST_LINE_START_ADDRESS + row;
 	}
 	
-	this->send(COMMAND, command, false);
+	this->Send(COMMAND, command, false);
 }
 
 
 // clears the screen
-void Lcd::clearDisplay() {
-	this->send(COMMAND, 0x01);
+void Lcd::ClearDisplay() {
+	this->Send(COMMAND, 0x01);
 	_delay_ms(1);
 }

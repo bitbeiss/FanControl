@@ -75,8 +75,8 @@ PWMOutput::~PWMOutput()
 {
 } //~PWMOutput
 
-
-void PWMOutput::SetDutyCycle(uint8_t value) {
+// sets the value output as a PWM signal on the pin
+void PWMOutput::SetOutputValue(uint8_t value) {
 	//if (value < 0) value = 0;
 	
 	if (m_use_8bit_timer) {

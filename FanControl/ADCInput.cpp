@@ -1,8 +1,7 @@
-/* 
-* ADCInput.cpp
-*
-* Created: 18.11.18 19:18:47
-* Author: filmu
+/*! \file ADCInput.cpp
+*	\brief Implementation of ADCInput class.
+*	\author Clemens J. Zuzan
+*	\author Klemens Svetitsch
 */
 
 #include <avr/io.h>
@@ -31,7 +30,7 @@ ADCInput::~ADCInput()
 } //~ADCInput
 
 
-void ADCInput::Start()
+void ADCInput::StartFreeRunningConversion()
 {
 	ADCSRA |= (1 << ADIE); // enable Interrupt
 	ADCSRA |= (1 << ADATE); // allow setting ADC to free running mode
