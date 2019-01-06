@@ -1,4 +1,5 @@
-/*! \file Fan.h
+/*! 
+*	\file Fan.h
 *	\author Clemens J. Zuzan
 *	\author Klemens Svetitsch
 *	\brief Header for Fan class.

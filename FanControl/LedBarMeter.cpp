@@ -1,11 +1,8 @@
 ﻿/*! 
 *	\file LedBarMeter.cpp
-*	\brief Implemenation of LedBarMeter class.
 *	\author Clemens J. Zuzan
 *	\author Klemens Svetitsch
-*	\brief Class implements a hardware driver for a HITACHI 44780 external LCD display.
-*	\brief Represents an Lcd data structure with all methods belonging to the liquid crystal display.
-*	\brief The class implements an Lcd hardware driver API.
+*	\brief 
 */
 
 #include "LedBarMeter.h"
@@ -22,9 +19,10 @@ LedBarMeter::LedBarMeter(Port& pt){
 LedBarMeter::~LedBarMeter(){
 }
 
+//! Initialize the LedBar: set data direction register of the led's Pins to output and set the output to zero as an initial state.
 void LedBarMeter::init() {
 	*(this->getPort().getDataDirectionRegisterAddress()) |= 0xF0;  //upper nibble (lower LED row) shall be the indicator
-	*(this->getPort().getAddress()) &= ~(0x0F); // set all Pins for LED bar output to 0 (LEDs off), leave lower pins untouched
+	*(this->getPort().getAddress()) &= ~(0x0F); //set all Pins for LED bar output to 0 (LEDs off), leave lower pins untouched
 }
 
 void LedBarMeter::setPort(Port& pt ) {
@@ -39,6 +37,7 @@ void LedBarMeter::setValue(uint8_t value) {
 	this->m_value = value;
 }
 
+//! Map the numeric value (0 to 254) to classes then represented by a shining led.
 void LedBarMeter::displayValue() {
 	if (m_value < 51){
 		this->getPort().delPin(4);

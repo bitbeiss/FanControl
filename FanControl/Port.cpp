@@ -1,7 +1,10 @@
-﻿/*! \file Port.cpp
-*	\brief Implemenation of port class.
+﻿/*! \class Port.cpp
 *	\author Clemens J. Zuzan
 *	\author Klemens Svetitsch
+*	\brief Class contains all data and methods regarding ports	
+*	\brief Data contained are port address, DDR, PIN
+*	\brief The port address can be seta and retrieved as DDR and PIN can.
+*	\brief setPin and delPin methods allow so set a single pin to true or false.
 */
 #include "Port.h"
 #include <avr/io.h>
@@ -16,10 +19,6 @@ Port::Port(
 	mPortRegister(port_reg),
 	mDataDirectionRegister(ddr_reg),
 	mPinRegister(pin_reg) {}
-		
-	//this->setAddress(port_reg);
-	//this->setDataDirectionRegisterAddress(ddr_reg);
-	//this->setPinRegisterAddress(pin_reg);
 
 Port::Port() {
 }

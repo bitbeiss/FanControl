@@ -1,4 +1,5 @@
-/*! \class LedBarMeter
+/*! 
+*	\class LedBarMeter
 *	\author Clemens J. Zuzan
 *	\author Klemens Svetitsch
 *	\brief The LedBarMeter transforms the voltage (set) in the belonging Voltage class-variable to the number (and order) of activated control LEDs

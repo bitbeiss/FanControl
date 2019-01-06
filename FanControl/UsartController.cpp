@@ -1,8 +1,8 @@
-/* 
-* UsartController.cpp
-*
-* Created: 9.12.18 14:29:30
-* Author: filmu
+/*! 
+*	\class UsartController
+*	\author Clemens J. Zuzan
+*	\author Klemens Svetitsch
+*	\brief The UsartController class delivers access to the serial port of the microcontroller.
 */
 
 #include "main.h"
@@ -21,9 +21,9 @@ CircularBuffer UsartController::s_receive_buffer;
 volatile uint8_t UsartController::s_char_buffer = 0;
 
 
-// creates a default controller for reading and writing data via USART
-// by default the controller does not allow settings for number of data bits, stop bits and parity
-// default values are parity: none, stop-bits: 1, data-bits: 8
+/*! Creates a default controller for reading and writing data via USART.
+// By default the controller does not allow settings for number of data-, stop- and parity bits.
+// Default values are:  parity: none, stop-bits: 1, data-bits: 8 */
 UsartController::UsartController(BaudRate baudrate, bool receive, bool transmit)
 {
 	SetBaudrate(baudrate);
@@ -76,7 +76,7 @@ UsartController::UsartController(BaudRate baudrate, bool receive, bool transmit)
 	
 } //UsartController
 
-// default destructor
+// default destructor override
 UsartController::~UsartController()
 {
 } //~UsartController
@@ -102,7 +102,7 @@ void UsartController::SetBaudrate(BaudRate baudrate)
 }
 
 
-// push the passed string data into a ring buffer and transmit the data as fast as possible
+//! Push the passed string data into a ring buffer and transmit the data as fast as possible.
 void UsartController::Transmit(const char data_tx[])
 {
 	for(int pos = 0; data_tx[pos] != '\0'; pos++) {

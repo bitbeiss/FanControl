@@ -1,4 +1,5 @@
-﻿/*! \class Byte
+﻿/*! 
+*	\class Byte
 *	\author Clemens J. Zuzan
 *	\author Klemens Svetitsch
 *	\brief  Implemenation of Byte class.

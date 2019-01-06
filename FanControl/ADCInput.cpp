@@ -1,4 +1,5 @@
-/*! \class ADCInput
+/*!
+*	\class ADCInput
 *	\brief Implementation of ADCInput class.
 *	\author Clemens J. Zuzan
 *	\author Klemens Svetitsch

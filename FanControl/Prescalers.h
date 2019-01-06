@@ -1,9 +1,9 @@
-/*
- * Prescalers.h
- *
- * Created: 18.11.18 19:24:28
- *  Author: filmu
- */ 
+/*!
+*	\file Prescalers.h
+*	\author Clemens J. Zuzan
+*	\author Klemens Svetitsch
+*	\brief Header defining available prescalers. ADC or PWM prescalers are made available via namespace.
+*/ 
 
 
 #ifndef PRESCALERS_H_

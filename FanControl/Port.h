@@ -1,10 +1,8 @@
-/*! \class Port
-*	\brief class contains all data and methods regarding ports
+/*! 
+*	\file Port.h
 *	\author Clemens J. Zuzan
-*	\author Klemens Svetitsch	
-*	Data contained are port address, DDR, PIN
-*	The port address can be seta and retrieved as DDR and PIN can.
-*	setPin and delPin methods allow so set a single pin to true or false.
+*	\author Klemens Svetitsch
+*	\brief Header file for the Port class.
 */
 
 #pragma once

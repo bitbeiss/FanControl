@@ -1,4 +1,5 @@
-/*! \file CircularBuffer.h
+/*! 
+*	\file CircularBuffer.h
 *	\author Clemens J. Zuzan
 *	\author Klemens Svetitsch
 *	\brief Header of the circular buffer class.

@@ -1,4 +1,4 @@
-/* 
+/*! 
 *	\class CircularBuffer
 *	\author Clemens J. Zuzan
 *	\author Klemens Svetitsch	

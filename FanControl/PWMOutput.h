@@ -1,7 +1,8 @@
-/*! \class PWMOutput
+/*! 
+*	\file PWMOutput
 *	\author Clemens J. Zuzan
 *	\author Klemens Svetitsch
-*	\brief
+*	\brief Header for the PWMOutput class.
 */
 
 

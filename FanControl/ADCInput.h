@@ -1,4 +1,5 @@
-/*! \file ADCInput.h
+/*! 
+*	\file ADCInput.h
 *	\author Clemens J. Zuzan
 *	\author Klemens Svetitsch
 *	\brief Header for ADCInput class.

@@ -82,14 +82,17 @@ void number_to_ascii(long number, char chars[], int padding_left) {
 int main(void)
 {	
 	//DDRA |= (1 << PA2);
+	// create and initialize a serial port instance
 	UsartController serial_controller = UsartController(BaudRates::_9600, true, true);
+	// create an instance of the Fan class
 	Fan fan = Fan();
 	sei();
 	
-	
+	//
 	Port ledBarPort(&PORTA,&DDRA,&PINA);
 	LedBarMeter ledBarMeter(ledBarPort); 
 	
+	// create an instance of the Lcd display and initialize it
 	Lcd lcd = Lcd();
 	lcd.Init4bit();
 	lcd.SetCursorPosition(1, 0);
@@ -98,7 +101,6 @@ int main(void)
 	lcd.Print("ITS uC Labor");
 	_delay_ms(250);
 	lcd.ClearDisplay();
-	
 	int lcd_delay_update_counter = 0;
 	
 	//volatile long lcd_counter_output = LCD_COUNTER_START;
@@ -124,7 +126,7 @@ int main(void)
 		fan_duty_cycle = fan.GetFanSpeedAsSingleByte(); // returns number between 0 and 255
 		ledBarMeter.setValue(fan_duty_cycle);
 		ledBarMeter.displayValue();
-		fan_duty_cycle = (fan_duty_cycle * 40) / 100; // map the duty cycle (0..255) to an approximate percentage (0..100) without floating point operations
+		fan_duty_cycle = (fan_duty_cycle * 40) / 100; // map the duty cycle (0..255) to an approximate percentage (0..100) without floating point operations. (Interger division as should be...)
 		if (fan_duty_cycle > 100) fan_duty_cycle = 100; // the multiplication with 40 may yield percentages greater 100 (255*40/100 = 102), in that case clip to 100%
 		
 		
@@ -145,11 +147,10 @@ int main(void)
 			serial_controller.Transmit(adc_output_str);
 			serial_controller.Transmit("%  ");
 			
-			
+			//send current data to Lcd for display
 			lcd.SetCursorPosition(2, 0);
 			//number_to_ascii(lcd_counter_output, counter_output_str);
 			//lcd.print(counter_output_str);
-			
 			//number_to_ascii(pulse_cnt>>1, counter_output_str);
 			//number_to_ascii(fan.GetPulseTimeMicroseconds(), pulse_length_us_str, 5);
 			sprintf(pulse_length_us_str, "%5ld", fan.GetFanRevolutionPeriodInMicroseconds());
@@ -157,6 +158,7 @@ int main(void)
 			lcd.Print("us");
 			lcd.Print(" ");
 			
+			//send current data to USART (PC). Data can be fetched on USB using a terminal like putty.
 			serial_controller.Transmit("|   ");
 			serial_controller.Transmit(pulse_length_us_str);
 			serial_controller.Transmit("us");

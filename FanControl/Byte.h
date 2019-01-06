@@ -1,4 +1,5 @@
-/*! \file Byte.h
+/*! 
+*	\file Byte.h
 *	\author Clemens J. Zuzan
 *	\author Klemens Svetitsch	
 *	\brief Contains several methods not necessarily bound to a class.

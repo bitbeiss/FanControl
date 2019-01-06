@@ -1,8 +1,8 @@
-/*
- * main.h
- *
- * Created: 13.11.18 10:29:47
- *  Author: filmu
+/*!
+ *	\file main.h
+*	\author Clemens J. Zuzan
+*	\author Klemens Svetitsch
+*	\brief Header for the main.cpp
  */ 
 
 #ifndef __MAIN_H__
@@ -10,6 +10,6 @@
 
 #include <avr/io.h>
 
-#define F_CPU 8000000
+#define F_CPU 8000000  //!< Setting CPU clock frequency
 
 #endif //__MAIN_H__

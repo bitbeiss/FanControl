@@ -1,20 +1,21 @@
-/* 
-* PWMOutput.cpp
-*
-* Created: 19.11.18 20:53:07
-* Author: filmu
+/*!
+* 	\class PWMOutput
+*	\author Clemens J. Zuzan
+*	\author Klemens Svetitsch
+*	\brief PWMOutput implements pulse width modulated output (PWM) at certain PINs of the microcontroller. Allows usage of one of the two 8-bit timers or the 16 bit timer.
 */
 
 
 #include "Prescalers.h"
 #include "PWMOutput.h"
 
-// default constructor
-PWMOutput::PWMOutput(uint8_t timer_to_use, PWMPrescaler prescaler)//volatile uint8_t* ddr_addr, uint8_t pin, bool use_16bit_timer)
+//! Default constructor override.
+PWMOutput::PWMOutput(uint8_t timer_to_use, PWMPrescaler prescaler) //note (member) data types: volatile uint8_t* ddr_addr, uint8_t outup_pin, bool use_16bit_timer
 {
 	uint8_t output_pin;
 	m_use_8bit_timer = timer_to_use != 1;
 	
+	// set the desired timer
 	switch(timer_to_use) {
 		case 0:
 			m_ddr_addr = &DDRB;
@@ -33,7 +34,7 @@ PWMOutput::PWMOutput(uint8_t timer_to_use, PWMPrescaler prescaler)//volatile uin
 			break;
 	}
 	
-	*m_ddr_addr |= (1 << output_pin); // set correct Port Pin to write mode
+	*m_ddr_addr |= (1 << output_pin); // set the PWM output port pin to write mode
 	
 	// reset duty cycle
 	if (m_use_8bit_timer) {
@@ -47,6 +48,7 @@ PWMOutput::PWMOutput(uint8_t timer_to_use, PWMPrescaler prescaler)//volatile uin
 	//TCCR2 |= (1 << WGM20); // set phase correct PWM Mode
 	//TCCR2 |= (1 << CS21); // set prescaler to 1
 	
+	//set and map prescalers to necessary bit-set operations in register
 	uint8_t clock_select_numeric;
 	switch(prescaler)
 	{
@@ -70,12 +72,12 @@ PWMOutput::PWMOutput(uint8_t timer_to_use, PWMPrescaler prescaler)//volatile uin
 	TCCR2 = (TCCR2 & ~PWMOutput::PRESCALER_MASK) | (clock_select_numeric & PWMOutput::PRESCALER_MASK);
 } //PWMOutput
 
-// default destructor
+//! Default destructor override.
 PWMOutput::~PWMOutput()
 {
 } //~PWMOutput
 
-// sets the value output as a PWM signal on the pin
+//! Sets the value output as a PWM signal on the pin
 void PWMOutput::SetOutputValue(uint8_t value) {
 	//if (value < 0) value = 0;
 	

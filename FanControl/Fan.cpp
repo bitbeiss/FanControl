@@ -1,4 +1,4 @@
-/* 
+/*! 
 * 	\class Fan
 * 	\author Clemens J. Zuzan
 *	\author Klemens Svetitsch
@@ -18,7 +18,8 @@
 Fan::Fan() :
 m_tachymeter(INT0),
 m_adcInput(PA0, this),
-m_pwmOutput(2, PWMPrescalers::_1) /*!< pwm output frequency is supposed to be higher than 20k -> 8M/256 = 31.25k, no prescaler required */
+m_pwmOutput(2, PWMPrescalers::_1) /*!< pwm output frequency is supposed to be higher than 20k -> 8M/256 = 31.25k, no prescaler required for PWM 
+									2 means: 8bit timer used*/
 {	
 	/*! We are not recording a signal here, just reading some human input. 
 		Therefore response time and time resolution are not essential and
