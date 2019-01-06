@@ -22,8 +22,9 @@
 #include "BaudRates.h"
 
 
-const int small_delay = 10; // LEDs are updated with small delay (milliseconds)
-const int large_delay = 60; // display is updated with large delay (milliseconds)
+// the delays specified below cannot be used to calculate FPS because this would ignore the time taken by the instructions excecuted in each loop
+const int small_delay = 10; // LEDs are updated with small delay (e.g. 10 milliseconds ~= 100fps)
+const int large_delay = 50; // display is updated with large delay (e.g. 50 milliseconds ~= 20fps)
 const int large_delay_steps = large_delay / small_delay;
 
 
@@ -37,7 +38,7 @@ int main(void)
 	Port ledBarPort(&PORTA,&DDRA,&PINA);
 	LedBarMeter ledBarMeter(ledBarPort); 
 	
-	// create an instance of the Lcd display and initialize it
+	// create an instance of the Lcd display and initialize it with a "welcome" message
 	Lcd lcd = Lcd();
 	lcd.Init4bit();
 	lcd.SetCursorPosition(1, 0);
@@ -68,19 +69,21 @@ int main(void)
 		fan_duty_cycle = fan.GetFanSpeedAsSingleByte(); // returns number between 0 and 255
 		ledBarMeter.setValue(fan_duty_cycle);
 		ledBarMeter.displayValue();
-		if (fan_duty_cycle > 100) fan_duty_cycle = 100; // the multiplication with 40 may yield percentages greater 100 (255*40/100 = 102), in that case clip to 100%
 		
 		
 		lcd_delay_update_counter++;
 		
-		// print the counter value only every 200ms
+		// print the counter value and send USART message only every ~50ms
+		// we could further increase display output speed by sending the USART message less frequently
+		// or we could increase USART speed by removing the display
 		if (lcd_delay_update_counter >= large_delay_steps) {
-			//lcd.clearDisplay();
+			//lcd.clearDisplay(); // this may be too slow
+			
+			fan_duty_cycle = (100 * fan_duty_cycle) / 255;
 			
 			lcd.SetCursorPosition(1, 0);
 			lcd.Print("Fan: ");
 			sprintf(adc_output_str, "%3d", fan_duty_cycle);
-			//number_to_ascii(fan_duty_cycle, adc_output_str, 3);
 			lcd.Print(adc_output_str);
 			lcd.Print("%");
 			

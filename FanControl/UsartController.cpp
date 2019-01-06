@@ -72,8 +72,6 @@ UsartController::UsartController(BaudRate baudrate, bool receive, bool transmit)
 			break;
 	}
 	
-	//UCSRC |= (1 << URSEL) | (1 << UMSEL);
-	
 } //UsartController
 
 // default destructor override
@@ -81,6 +79,8 @@ UsartController::~UsartController()
 {
 } //~UsartController
 
+
+//! Sets up the USART to use the given baudrate. These are limited to specific established values.
 void UsartController::SetBaudrate(BaudRate baudrate)
 {
 	uint16_t baudrate_nr;
@@ -115,10 +115,12 @@ void UsartController::Transmit(const char data_tx[])
 	}
 }
 
+//! Returns the number of elements currently contained in the buffer
 uint8_t UsartController::GetReceiveBufferLength() {
 	return UsartController::s_receive_buffer.GetLoad();
 }
 
+//! Writes the buffer contents into the passed array; the length of the contents can be retrieved from GetReceiveBufferLength()
 void UsartController::GetReceiveData(uint8_t* out_data)
 {
 	uint8_t char_buffer;
@@ -129,8 +131,8 @@ void UsartController::GetReceiveData(uint8_t* out_data)
 
 uint8_t c_char_buffer;
 
+//! This interrupt is called when the last USART message has been sent out, indicating that the next message can be sent
 void USART_TXC_vect(void) {
-	//UDR = ch++;
 	
 	//if (UsartController::s_buffer.Pop(const_cast<uint8_t*>(&UsartController::s_char_buffer))) {
 	if (UsartController::s_transmit_buffer.Pop(&c_char_buffer)) {
@@ -138,6 +140,7 @@ void USART_TXC_vect(void) {
 	}
 }
 
+//! This interrupt is called when a USART message has been received, indicating that the data should be retrieved from the register and stored
 void USART_RXC_vect(void) {
 	PORTA ^= (1 << PA2);
 	c_char_buffer = UDR;

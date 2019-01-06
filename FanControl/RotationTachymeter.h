@@ -17,7 +17,8 @@ class RotationTachymeter
 {
 // constants
 public:
-	static const unsigned long PERIOD_WIDTH_MULTIPLIER = 1000000 * 64 / F_CPU; /*! Factor to get from timer counts to microseconds with prescaler 64 */
+	static const unsigned int PRESCALER = 64;
+	static const unsigned long PERIOD_WIDTH_MULTIPLIER = 1000000 * PRESCALER / F_CPU; /*! Factor to get from timer counts to microseconds with prescaler 64 */
 	static const unsigned long RPM_MULTIPLIER = (1000000 * 60)/(2 * PERIOD_WIDTH_MULTIPLIER); /*! Times 60 for rps to rpm, times 1m for rpus to rps */
 	
 //variables
@@ -42,7 +43,7 @@ public:
 protected:
 private:
 	void initTimers();
-	void initInterrupts(uint8_t interrupt_pin);
+	void initInterrupt(uint8_t interrupt_pin);
 
 }; //RotationTachymeter
 

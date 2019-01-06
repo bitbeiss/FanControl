@@ -22,6 +22,7 @@ PWMOutput::PWMOutput(uint8_t timer_to_use, PWMPrescaler prescaler) //note (membe
 			output_pin = PB3;
 			m_ocr8bit_addr = &OCR0;
 			break;
+		default:
 		case 1:
 			m_ddr_addr = &DDRD;
 			output_pin = PD4; //output_pin = PB5;
@@ -52,6 +53,7 @@ PWMOutput::PWMOutput(uint8_t timer_to_use, PWMPrescaler prescaler) //note (membe
 	uint8_t clock_select_numeric;
 	switch(prescaler)
 	{
+		default:
 		case PWMPrescalers::_stop:
 			clock_select_numeric = 0; break;
 		case PWMPrescalers::_1:

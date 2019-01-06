@@ -24,8 +24,6 @@ private:
 	ADCInput m_adcInput;
 	PWMOutput m_pwmOutput;
 	
-	//const static uint8_t ADC_INPUT_DIVIDER = ADCInput::MAX_VALUE >> 2;
-	//const static uint8_t ADC_INPUT_DIVIDER = 4;
 
 //functions
 public:
@@ -41,7 +39,6 @@ public:
 
 protected:
 private:
-	//static void ReceiveUserStrengthInput(uint16_t strength);
 	
 
 }; //Fan

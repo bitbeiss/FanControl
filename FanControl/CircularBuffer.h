@@ -17,7 +17,7 @@ class CircularBuffer
 public:
 protected:
 private:
-	const static uint8_t BUFFER_SIZE = 96; /*! \var BUFFER_SIZE Is the freely chosen size of the circular buffer (supposed good tradeoff between memory usage and speed */
+	const static uint8_t BUFFER_SIZE = 96; /*! \var BUFFER_SIZE Is the freely chosen size of the circular buffer (supposed good tradeoff between memory usage and speed) */
 
 	uint8_t m_buffer[BUFFER_SIZE];
 	volatile uint8_t m_pRead, m_pWrite;
@@ -27,8 +27,6 @@ private:
 public:
 	CircularBuffer();
 	~CircularBuffer();
-	
-	//void SetBufferSize(uint16_t buffer_size);
 	
 	bool Push(uint8_t value); 		//! Adds a new element at the end of the buffer
 	bool Pop(uint8_t* value_ref); 	//! Returns the first element in the buffer and removes it

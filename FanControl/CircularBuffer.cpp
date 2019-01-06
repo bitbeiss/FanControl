@@ -9,14 +9,14 @@
 #include "CircularBuffer.h"
 
 
-// default constructor
+//! default constructor
 CircularBuffer::CircularBuffer()
 {
-	this->clear(); //! Initialize buffer.
+	this->Clear(); //! Initialize buffer.
 } //CircularBuffer
 
 
-// default destructor
+//! default destructor
 CircularBuffer::~CircularBuffer()
 {
 } //~CircularBuffer

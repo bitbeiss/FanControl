@@ -14,7 +14,7 @@
 #include "Fan.h"
 
 
-// default constructor
+//! default constructor
 Fan::Fan() :
 m_tachymeter(INT0),
 m_adcInput(PA0, this),
@@ -23,17 +23,18 @@ m_pwmOutput(2, PWMPrescalers::_1) /*!< pwm output frequency is supposed to be hi
 {	
 	/*! We are not recording a signal here, just reading some human input. 
 		Therefore response time and time resolution are not essential and
-		so we are using the highest prescaler (128). */
+		so the highest prescaler (128) should be sufficient. */
 	m_adcInput.SetPrescaler(ADCPrescalers::_128);
 	m_adcInput.StartFreeRunningConversion();
 } //Fan
 
-// default destructor
+//! default destructor
 Fan::~Fan()
 {
 } //~Fan
 
 
+//! Returns the duration of one fan revolution in microseconds
 long Fan::GetFanRevolutionPeriodInMicroseconds() {
 	return m_tachymeter.GetRotationPeriodLengthInMicroseconds();
 }

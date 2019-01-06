@@ -25,19 +25,22 @@ void LedBarMeter::init() {
 	*(this->getPort().getAddress()) &= ~(0x0F); //set all Pins for LED bar output to 0 (LEDs off), leave lower pins untouched
 }
 
+//! Give the LedBarMeter the Port it should use to control the LEDs
 void LedBarMeter::setPort(Port& pt ) {
 	this->lbm_Port = pt;
 }
 
+//! Returns the Port this LedBarMeter uses to control the LEDs
 Port LedBarMeter::getPort() {
 	return this->lbm_Port;
 }
 
+//! Set the value "displayed" by the LedBarMeter; 0-51 enables 0 LEDs, 52-102 one LED, 103-153 two LEDs, 154-204 three LEDs 205-255 four LEDs
 void LedBarMeter::setValue(uint8_t value) {
 	this->m_value = value;
 }
 
-//! Map the numeric value (0 to 254) to classes then represented by a shining led.
+//! Map the numeric value (0 to 254) to classes then represented by enabling the correspoding LEDs.
 void LedBarMeter::displayValue() {
 	if (m_value < 51){
 		this->getPort().delPin(4);
