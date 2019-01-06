@@ -1,7 +1,7 @@
-/*! \class RotationTachymeter
+/*! \file RotationTachymeter.h
 *	\author Clemens J. Zuzan
 *	\author Klemens Svetitsch
-*	\brief
+*	\brief Header for RotationTachymeter class.
 */
 
 
@@ -17,8 +17,8 @@ class RotationTachymeter
 {
 // constants
 public:
-	static const unsigned long PERIOD_WIDTH_MULTIPLIER = 1000000 * 64 / F_CPU; // factor to get from timer counts to microseconds with prescaler 64
-	static const unsigned long RPM_MULTIPLIER = (1000000 * 60)/(2 * PERIOD_WIDTH_MULTIPLIER); // times 60 for rps to rpm, times 1m for rpus to rps
+	static const unsigned long PERIOD_WIDTH_MULTIPLIER = 1000000 * 64 / F_CPU; /*! Factor to get from timer counts to microseconds with prescaler 64 */
+	static const unsigned long RPM_MULTIPLIER = (1000000 * 60)/(2 * PERIOD_WIDTH_MULTIPLIER); /*! Times 60 for rps to rpm, times 1m for rpus to rps */
 	
 //variables
 public:

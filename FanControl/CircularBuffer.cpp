@@ -1,8 +1,8 @@
 /* 
-* CircularBuffer.cpp
-*
-* Created: 2.12.18 13:39:15
-* Author: filmu
+*	\class CircularBuffer
+*	\author Clemens J. Zuzan
+*	\author Klemens Svetitsch	
+*	\brief Implementation of a circular buffer as a class.
 */
 
 
@@ -12,7 +12,7 @@
 // default constructor
 CircularBuffer::CircularBuffer()
 {
-
+	this->clear(); //! Initialize buffer.
 } //CircularBuffer
 
 
@@ -21,7 +21,7 @@ CircularBuffer::~CircularBuffer()
 {
 } //~CircularBuffer
 
-
+//! Push a value into the buffer.
 bool CircularBuffer::Push(uint8_t value)
 {
 	m_buffer[m_pWrite++] = value;
@@ -36,6 +36,7 @@ bool CircularBuffer::Push(uint8_t value)
 	}
 }
 
+//! Pull a value out of the buffer.
 bool CircularBuffer::Pop(uint8_t* value_ref)
 {
 	//if (m_pRead == m_pWrite) // buffer is empty
@@ -51,6 +52,7 @@ bool CircularBuffer::Pop(uint8_t* value_ref)
 	return true;
 }
 
+//! Clear and/or initialize the buffer.
 void CircularBuffer::Clear()
 {
 	for(int i = 0; i < BUFFER_SIZE; ++i) {
@@ -59,6 +61,7 @@ void CircularBuffer::Clear()
 	m_pRead = m_pWrite = 0;
 }
 
+//! Obtain number of currently loaded values within the buffer.
 int CircularBuffer::GetLoad()
 {
 	return m_count;

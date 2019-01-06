@@ -1,23 +1,16 @@
-﻿/*! \file Byte.cpp
-*	\brief  Implemenation of Byte class.
+﻿/*! \class Byte
 *	\author Clemens J. Zuzan
 *	\author Klemens Svetitsch
+*	\brief  Implemenation of Byte class.
 */
 
 #include <avr/io.h>
 #include "Byte.h"
 
+/*! Check if a bit is set or not at a given position.
+	\param pos position of byte to check on
+	\param byte byte containing the parameter of interest
+	\return true/false */
 bool isset(uint8_t pos, uint8_t byte) {
 	return (byte & (1 << pos));
 }
-
-// was tut die Funktion? übergeben wird ja ein value, kein Pointer; dh die Funktion ändert den value, gibt aber nichts zurück
-/*void set(uint8_t port, uint8_t bit) {
-	port |= (1 << bit);
-}
-
-// Same here
-void del(uint8_t port, uint8_t bit) {
-	port &= ~(1 << bit);
-}
-*/

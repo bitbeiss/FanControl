@@ -1,4 +1,4 @@
-/*! \file ADCInput.cpp
+/*! \class ADCInput
 *	\brief Implementation of ADCInput class.
 *	\author Clemens J. Zuzan
 *	\author Klemens Svetitsch
@@ -19,7 +19,7 @@ ADCInput::ADCInput(uint8_t adc_input_pin, CallbackReceiver* target) : m_callback
 {
 	ADCInput::s_adcInputs[adc_input_pin] = this;
 	DDRA  &= ~(1 << adc_input_pin);
-	ADMUX |= (adc_input_pin & 0x07); // choose the input pin to connect to the ADC
+	ADMUX |= (adc_input_pin & 0x07); //!< Choose the input pin to connect to the ADC. 0x07 is the hexcode for pin 8.
 	ADCSRA |= (1 << ADEN); // enable ADC
 	
 } //ADCInput
@@ -29,7 +29,7 @@ ADCInput::~ADCInput()
 {
 } //~ADCInput
 
-
+//! Set the analog/digital conversion mode to interrupt based free-running mode.
 void ADCInput::StartFreeRunningConversion()
 {
 	ADCSRA |= (1 << ADIE); // enable Interrupt
@@ -38,6 +38,7 @@ void ADCInput::StartFreeRunningConversion()
 	ADCSRA |= (1 << ADSC); // start ADC
 }
 
+//! Assign the appropriate numeric values (used to set the bits) for various prescaler-deviders.
 void ADCInput::SetPrescaler(ADCPrescaler prescaler)
 {
 	uint8_t numeric_value = 0;
@@ -62,6 +63,7 @@ void ADCInput::SetPrescaler(ADCPrescaler prescaler)
 	ADCSRA = (ADCSRA & ~ADCInput::PRESCALER_MASK) | ( (numeric_value << 0) & ADCInput::PRESCALER_MASK );
 }
 
+//! Read the converted 10bit representation of the processed analog input.
 void ADC_vect(void) {
 	uint8_t trigger_pin = ADMUX & ((1 << MUX3) | (1 << MUX2) | (1 << MUX1) | (1 << MUX0));
 

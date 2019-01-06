@@ -1,7 +1,11 @@
-﻿/*! \file LedBarMeter.cpp
+﻿/*! 
+*	\file LedBarMeter.cpp
 *	\brief Implemenation of LedBarMeter class.
 *	\author Clemens J. Zuzan
 *	\author Klemens Svetitsch
+*	\brief Class implements a hardware driver for a HITACHI 44780 external LCD display.
+*	\brief Represents an Lcd data structure with all methods belonging to the liquid crystal display.
+*	\brief The class implements an Lcd hardware driver API.
 */
 
 #include "LedBarMeter.h"

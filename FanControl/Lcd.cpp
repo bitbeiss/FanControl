@@ -1,7 +1,7 @@
-﻿/*! \file Lcd.cpp
-*	\brief Implementation of Lcd class. 
+﻿/*! \class Lcd
 *	\author Clemens J. Zuzan
 *	\author Klemens Svetitsch
+*	\brief Implementation of Lcd display driver. Offers initialization and send commands.
 */
 
 #include "main.h"
@@ -13,32 +13,28 @@
 #include "Lcd.h"
 #include "Port.h"
 
+//! Constructor: initialize Ports and set Pins to write mode.
 Lcd::Lcd()
 {
-	// create and assign new Port configuration for LCD display	
+	//! Create and assign new Port configuration for LCD display.	
 	Port lcdPort(&LCDPORT,&LCDDDR,&LCDPIN);
 	this->mLcdPort = lcdPort;
 	
-	// set all Pins of the LCD Port to WRITE
+	//! Set all Pins of the LCD Port to WRITE
 	*(this->mLcdPort.getDataDirectionRegisterAddress()) |= (0xFF);
 }
 
-
+//! Used mainly for initialization of the display. (Which is initially in eight bit receive at one mode. Due to hardware wirings only 4 bits are actually sent though.)
 void Lcd::send8bit(uint8_t type, uint8_t input) {
 	setRegisterSelectPin(type);
-	//Port led_port = Port(&PORTA, &DDRA, &PINA);
-	//DDRA = 0xFF;
 	
-	// ToDo i<=7 in 8 bit mode?
 	for(volatile int i = 0; i <= 3; i++) {
 		//bit_value = isset(input, i);
 		if(input & (1 << i)) {
 			this->mLcdPort.setPin(mSendPins8Bit[i]);
-			//led_port.setPin(i);
 		}
 		else {
 			this->mLcdPort.delPin(mSendPins8Bit[i]);
-			//led_port.delPin(i);
 		}
 	}
 	
@@ -46,20 +42,17 @@ void Lcd::send8bit(uint8_t type, uint8_t input) {
 	this->sendEnablePulse();
 }
 
+//! Sending a character value to the display will be using this function with the given hardware-wiring.
 void Lcd::send4bit(uint8_t type, uint8_t input) {
 	setRegisterSelectPin(type);
-	
-	//Port led_port = Port(&PORTA, &DDRA, &PINA);
 	
 	// send upper Nibble
 	for(int i = 4; i <= 7; i++) {
 		if(input & (1 << i)) {
 			this->mLcdPort.setPin(mSendPins4Bit[i]);
-			//led_port.setPin(i);
 		}
 		else {
 			this->mLcdPort.delPin(mSendPins4Bit[i]);
-			//led_port.delPin(i);
 		}
 	}
 	
@@ -70,11 +63,9 @@ void Lcd::send4bit(uint8_t type, uint8_t input) {
 	for(int i = 0; i <= 3; i++) {
 		if(input & (1 << i)) {
 			this->mLcdPort.setPin(mSendPins4Bit[i]);
-			//led_port.setPin(i);
 		}
 		else {
 			this->mLcdPort.delPin(mSendPins4Bit[i]);
-			//led_port.delPin(i);
 		}
 	}
 	
@@ -82,6 +73,7 @@ void Lcd::send4bit(uint8_t type, uint8_t input) {
 	this->sendEnablePulse();
 }
 
+//! Determine if to send data or a command by setting the RS Pin.
 void inline Lcd::setRegisterSelectPin(uint8_t type) {
 	if (type == COMMAND) {
 		// set RS Pin to 0 to send a command
@@ -89,20 +81,20 @@ void inline Lcd::setRegisterSelectPin(uint8_t type) {
 	}
 	else {
 		// set RS pin to 1 to send data
-		this->mLcdPort.setPin(LCD_PIN_RS); // @Clemens sollte das nicht PIN_RS sein?
+		this->mLcdPort.setPin(LCD_PIN_RS);
 	}
 }
 
-// sends a command or data to the HD44780 LCD display and waits 50us afterwards
+//! Sends a command or data to the HD44780 LCD display and waits 50us afterwards.
 void Lcd::Send(uint8_t type, uint8_t input) {
 	this->Send(type, input, false);
 }
 
-// sends a command or data to the HD44780 LCD display and then adds either a long (2ms) or short delay (50us)
+//! Sends a command or data to the HD44780 LCD display and then adds either a long (2ms) or short delay (50us).
 void Lcd::Send(uint8_t type, uint8_t input, bool long_delay) {
 		
 	// if we are working in 4-bit mode we need to send the upper nibble now
-	// otherwise we set all of the pins and send then
+	// otherwise we set all of the pins and send them
 	if(this->mUseFourBitMode) {
 		this->send4bit(type, input);
 	} else {
@@ -133,13 +125,14 @@ void inline Lcd::sendEnablePulse() {
 	//_delay_us(50);
 }
 
-
+//! Initialize LCD display to operate in four bit mode. (Sending a character of eight bits thus then will take two send-operations.)
 void Lcd::Init4bit() {
 	*(this->mLcdPort.getAddress()) = 0x00;
 	
 	// wait for some time, according to data sheet
 	_delay_ms(15);
 	
+	//sytax: type ("COMMAND" | "DATA", "value to send")
 	this->send8bit(COMMAND, 0x03);
 	_delay_ms(5);
 	
@@ -161,7 +154,7 @@ void Lcd::Init4bit() {
 	this->send4bit(COMMAND, command);
 	_delay_us(40);
 	
-	// set LCD on, cursor off, cursor blinking off
+	//set LCD on, cursor off, cursor blinking off
 	//command = LCD_DISPLAY_CTRL | LCD_ON | LCD_CURSOR_ON | LCD_BLINK_ON;
 	command = LCD_DISPLAY_CTRL | LCD_ON | LCD_CURSOR_OFF | LCD_BLINK_OFF;
 	this->send4bit(COMMAND, command);
@@ -172,29 +165,9 @@ void Lcd::Init4bit() {
 	// return home
 	this->send4bit(COMMAND, 0x02);
 	_delay_us(1700);
-	
-	/*this->send4bit(DATA, 49);
-	_delay_ms(2);*/
 }
 
-/*void Lcd::Init8bit() {
-	_delay_us(15);
-	this->send8bit(COMMAND,0x2C);
-	this->enPulse();
-	_delay_ms(5);
-	this->send8bit(COMMAND,0x0C);
-	this->enPulse();
-	_delay_us(200);
-	this->send8bit(COMMAND,0x01);
-	this->enPulse();
-	this->send8bit(COMMAND,0x2);
-	this->enPulse();
-}*/
-
-//void Lcd::configure(uint8_t type, uint8_t lcd_cmd) {}
-
-
-// sets the cursor position to the given line and row
+//! Sets the cursor position to the given line and row.
 void Lcd::SetCursorPosition(uint8_t line, uint8_t row)
 {
 	if (row >= 40) row %= 40;
@@ -211,7 +184,7 @@ void Lcd::SetCursorPosition(uint8_t line, uint8_t row)
 }
 
 
-// clears the screen
+//! Clears the screen.
 void Lcd::ClearDisplay() {
 	this->Send(COMMAND, 0x01);
 	_delay_ms(1);

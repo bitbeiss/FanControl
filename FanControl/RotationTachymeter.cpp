@@ -1,8 +1,8 @@
-/* 
-* RotationTachymeter.cpp
-*
-* Created: 13.11.18 10:01:47
-* Author: filmu
+/*
+* 	\class  RotationTachymeter
+* 	\author Clemens J. Zuzan
+*	\author Klemens Svetitsch
+*	\brief The RotationTachymeter contains all calculus functions related to period and speed. (Used also by the Fan class.)
 */
 
 
@@ -12,18 +12,17 @@
 
 volatile uint16_t RotationTachymeter::m_timer_value = 0;
 
-// default constructor
+//! Default constructor
 RotationTachymeter::RotationTachymeter(uint8_t interrupt_pin)
 {
 	initInterrupts(interrupt_pin);
 	initTimers();
 } //RotationTachymeter
 
-// default destructor
+//! Default destructor
 RotationTachymeter::~RotationTachymeter()
 {
 } //~RotationTachymeter
-
 
 
 // PUBLIC functions

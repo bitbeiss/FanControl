@@ -1,7 +1,7 @@
-/*! \class ADCInput
+/*! \file ADCInput.h
 *	\author Clemens J. Zuzan
 *	\author Klemens Svetitsch
-*	\brief 
+*	\brief Header for ADCInput class.
 */
 
 
@@ -17,6 +17,7 @@ class ADCInput
 {
 //variables
 public:
+	//! React to interrupt (conversion completed) via this callback. */
 	class CallbackReceiver
 	{
 		public:
@@ -44,7 +45,7 @@ private:
 	friend void ADC_vect(void);
 
 public:
-	const static uint16_t MAX_VALUE = 1023;
+	const static uint16_t MAX_VALUE = 1023; /*!< \var MAX_VALUE represents the maximum of the 10 bit a/d conversion */
 }; //ADCInput
 	
 	
