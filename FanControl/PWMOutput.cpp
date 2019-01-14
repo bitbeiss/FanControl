@@ -2,14 +2,14 @@
 * 	\class PWMOutput
 *	\author Clemens J. Zuzan
 *	\author Klemens Svetitsch
-*	\brief PWMOutput implements pulse width modulated output (PWM) at certain PINs of the microcontroller. Allows usage of one of the two 8-bit timers or the 16 bit timer.
+*	\brief PWMOutput implements pulse width modulated output (PWM) on certain PINs of the microcontroller. Allows usage of one of the two 8-bit timers or the 16 bit timer.
 */
 
 
 #include "Prescalers.h"
 #include "PWMOutput.h"
 
-//! Default constructor override.
+//! Initializes the pins and timers to use for the PWM signal output
 PWMOutput::PWMOutput(uint8_t timer_to_use, PWMPrescaler prescaler) //note (member) data types: volatile uint8_t* ddr_addr, uint8_t outup_pin, bool use_16bit_timer
 {
 	uint8_t output_pin;
@@ -79,7 +79,7 @@ PWMOutput::~PWMOutput()
 {
 } //~PWMOutput
 
-//! Sets the value output as a PWM signal on the pin
+//! Sets the value output as a PWM signal
 void PWMOutput::SetOutputValue(uint8_t value) {
 	//if (value < 0) value = 0;
 	

@@ -1,6 +1,6 @@
-/*! \file FanControl.cpp
+/*! \file main.cpp
 *	\brief Main function and center of the FanControl software.
-*	\date 2018
+*	\date 2018 December
 *	\author Clemens J. Zuzan
 *	\author Klemens Svetitsch
 */ 
@@ -23,8 +23,11 @@
 
 
 // the delays specified below cannot be used to calculate FPS because this would ignore the time taken by the instructions excecuted in each loop
-const int small_delay = 10; // LEDs are updated with small delay (e.g. 10 milliseconds ~= 100fps)
-const int large_delay = 50; // display is updated with large delay (e.g. 50 milliseconds ~= 20fps)
+//! LEDs are updated with small delay (e.g. 10 milliseconds ~= 100fps)
+const int small_delay = 10; 
+//! display is updated with large delay (e.g. 50 milliseconds ~= 20fps)
+const int large_delay = 50; 
+//! relation of large to small delay, used to determine when large delay has elapsed
 const int large_delay_steps = large_delay / small_delay;
 
 
@@ -53,14 +56,15 @@ int main(void)
 	char adc_output_str[5];
 	uint16_t fan_duty_cycle = 0;
 	
-	//serial_controller.Transmit("\e[1A\r\n");
-	//serial_controller.Transmit("\e[38;5;196m");
+	serial_controller.Transmit("\e[1A\r\n");
+	serial_controller.Transmit("\e[38;5;196m");
 	serial_controller.Transmit("ITS uC Labor\r\n");
 	serial_controller.Transmit("Fan Controller\r\n");
 	serial_controller.Transmit(" Duty  | Pulse Time |  RPM  \r\n");
 	serial_controller.Transmit("\r\n");
-	//serial_controller.Transmit("\e[38;5;255m");
+	serial_controller.Transmit("\e[38;5;255m");
 	
+	_delay_ms(50);
 	
     while (1) 
     {
@@ -87,9 +91,13 @@ int main(void)
 			lcd.Print(adc_output_str);
 			lcd.Print("%");
 			
-			//serial_controller.Transmit("\e[1A ");
+			
+			
+			serial_controller.Transmit("\e[1A ");
 			serial_controller.Transmit(adc_output_str);
 			serial_controller.Transmit("%  ");
+			
+			
 			
 			//send current data to Lcd for display
 			lcd.SetCursorPosition(2, 0);
@@ -104,7 +112,6 @@ int main(void)
 			serial_controller.Transmit("us");
 			serial_controller.Transmit("  ");
 			
-			//number_to_ascii(fan.GetRPM(), pulse_length_us_str, 4);
 			sprintf(pulse_length_us_str, "%4d", fan.GetFanSpeedInRoundsPerMinute());
 			lcd.Print(pulse_length_us_str);
 			lcd.Print("rpm");
@@ -112,7 +119,8 @@ int main(void)
 			
 			serial_controller.Transmit("| ");
 			serial_controller.Transmit(pulse_length_us_str);
-			serial_controller.Transmit("     \r\n");
+			serial_controller.Transmit("\r\n");
+			
 			
 			lcd_delay_update_counter = 0;
 			

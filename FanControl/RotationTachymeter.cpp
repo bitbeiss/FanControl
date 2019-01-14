@@ -12,7 +12,7 @@
 
 volatile uint16_t RotationTachymeter::m_timer_value = 0;
 
-//! Default constructor, initializes the hardware (interrupt and timer)
+//! Initializes the hardware (interrupt and timer)
 RotationTachymeter::RotationTachymeter(uint8_t interrupt_pin)
 {
 	initInterrupt(interrupt_pin);
@@ -59,7 +59,7 @@ void RotationTachymeter::initTimers() {
 }
 
 
-//! external interrupt from fan (called twice per round)
+//! external interrupt from fan (called twice per full revolution)
 void INT0_vect(void) {
 	RotationTachymeter::m_timer_value = TCNT1;
 	TCNT1 = 0; // reset counter

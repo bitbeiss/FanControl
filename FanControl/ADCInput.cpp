@@ -1,6 +1,6 @@
 /*!
 *	\class ADCInput
-*	\brief Implementation of ADCInput class.
+*	\brief Converts analog signal to digital by using the microcontroller's ADC
 *	\author Clemens J. Zuzan
 *	\author Klemens Svetitsch
 */

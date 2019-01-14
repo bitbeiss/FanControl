@@ -9,10 +9,10 @@
 #include "CircularBuffer.h"
 
 
-//! default constructor
+//! Initialize the buffer
 CircularBuffer::CircularBuffer()
 {
-	this->Clear(); //! Initialize buffer.
+	this->Clear(); 
 } //CircularBuffer
 
 
@@ -21,34 +21,34 @@ CircularBuffer::~CircularBuffer()
 {
 } //~CircularBuffer
 
-//! Push a value into the buffer.
-bool CircularBuffer::Push(uint8_t value)
+//! Adds a new element at the end of the buffer
+bool CircularBuffer::Push(char value)
 {
-	m_buffer[m_pWrite++] = value;
-	
-	if (m_pWrite >= BUFFER_SIZE)
-		m_pWrite = 0;
-	
-	if (m_pWrite == m_pRead+1 && m_count > 1) {
-		m_pRead = m_pWrite;
-	} else {
-		m_count++;
-	}
-}
-
-//! Pull a value out of the buffer.
-bool CircularBuffer::Pop(uint8_t* value_ref)
-{
-	//if (m_pRead == m_pWrite) // buffer is empty
-	if (m_count == 0)
+	// if buffer is full, do not push
+	if (m_pWrite == m_pRead && m_count > 0)
 		return false;
 		
-	*value_ref = m_buffer[m_pRead++];
+	m_buffer[m_pWrite] = value;
+	m_count++;
+	
+	m_pWrite++;
+	m_pWrite %= BUFFER_SIZE;
+	
+	return true;
+}
+
+//! Returns the first element in the buffer and removes it
+bool CircularBuffer::Pop(char* value_ref)
+{
+	if (m_count <= 0)
+		return false;
+		
+	*value_ref = m_buffer[m_pRead];
 	m_count--;
 	
-	if (m_pRead >= CircularBuffer::BUFFER_SIZE)
-		m_pRead = 0;
-		
+	m_pRead++;
+	m_pRead %= BUFFER_SIZE;	
+	
 	return true;
 }
 
@@ -59,9 +59,10 @@ void CircularBuffer::Clear()
 		m_buffer[i] = 0;
 	}
 	m_pRead = m_pWrite = 0;
+	m_count = 0;
 }
 
-//! Obtain number of currently loaded values within the buffer.
+//! Obtain number of elements currently contained in the buffer.
 int CircularBuffer::GetLoad()
 {
 	return m_count;

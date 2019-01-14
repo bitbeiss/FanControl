@@ -38,6 +38,8 @@ public:
 	void GetReceiveData(uint8_t* out_data);
 	//void SetReceiver(UsartReceiver receiver);
 	
+	void ClearTransmitBuffer();
+	
 protected:
 private:
 	friend void USART_TXC_vect(void);

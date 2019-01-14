@@ -2,7 +2,7 @@
 *	\class UsartController
 *	\author Clemens J. Zuzan
 *	\author Klemens Svetitsch
-*	\brief The UsartController class delivers access to the serial port of the microcontroller.
+*	\brief Provides access to the serial port (USART functionality) of the microcontroller
 */
 
 #include "main.h"
@@ -22,8 +22,8 @@ volatile uint8_t UsartController::s_char_buffer = 0;
 
 
 /*! Creates a default controller for reading and writing data via USART.
-// By default the controller does not allow settings for number of data-, stop- and parity bits.
-// Default values are:  parity: none, stop-bits: 1, data-bits: 8 */
+By default the controller does not allow settings for number of data-, stop- and parity bits.
+Default values are:  parity: none, stop-bits: 1, data-bits: 8 */
 UsartController::UsartController(BaudRate baudrate, bool receive, bool transmit)
 {
 	SetBaudrate(baudrate);
@@ -83,7 +83,7 @@ UsartController::~UsartController()
 //! Sets up the USART to use the given baudrate. These are limited to specific established values.
 void UsartController::SetBaudrate(BaudRate baudrate)
 {
-	uint16_t baudrate_nr;
+	uint16_t baudrate_nr = 0;
 	switch(baudrate) {
 		case BaudRates::_2400: baudrate_nr = 2400; break;
 		case BaudRates::_4800: baudrate_nr = 4800; break;
@@ -109,10 +109,14 @@ void UsartController::Transmit(const char data_tx[])
 		UsartController::s_transmit_buffer.Push(data_tx[pos]);
 	}
 	
-	// if the current transmit buffer is empty the transmit interrupt will not be called automatically, trigger it manually
+	// if the current transmit buffer is empty the transmit interrupt will not be called automatically, therefore we trigger it manually
 	if (UCSRA & (1 << UDRE)) {
 		USART_TXC_vect();
 	}
+}
+
+void UsartController::ClearTransmitBuffer() {
+	UsartController::s_transmit_buffer.Clear();
 }
 
 //! Returns the number of elements currently contained in the buffer
@@ -123,13 +127,13 @@ uint8_t UsartController::GetReceiveBufferLength() {
 //! Writes the buffer contents into the passed array; the length of the contents can be retrieved from GetReceiveBufferLength()
 void UsartController::GetReceiveData(uint8_t* out_data)
 {
-	uint8_t char_buffer;
+	char char_buffer;
 	while (UsartController::s_receive_buffer.Pop(&char_buffer)) {
 		*(out_data++) = char_buffer;
 	}
 }
 
-uint8_t c_char_buffer;
+char c_char_buffer;
 
 //! This interrupt is called when the last USART message has been sent out, indicating that the next message can be sent
 void USART_TXC_vect(void) {

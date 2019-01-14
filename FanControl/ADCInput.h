@@ -18,13 +18,14 @@ class ADCInput
 {
 //variables
 public:
-	//! React to interrupt (conversion completed) via this callback. */
+	//! When registered to an instance of ADCInput is notified whenever an ADC conversion is completed
 	class CallbackReceiver
 	{
 		public:
 		virtual void ReceiveADCValue(uint16_t value) = 0;
 	};
-
+	
+	/*! Receives the converted values once available via the ReceiveADCValue callback method */
 	CallbackReceiver* m_callbackTarget;
 
 protected:

@@ -1,4 +1,4 @@
-﻿/*! \class Port.cpp
+﻿/*! \class Port
 *	\author Clemens J. Zuzan
 *	\author Klemens Svetitsch
 *	\brief Class contains all data and methods regarding ports	

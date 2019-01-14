@@ -1,8 +1,7 @@
 ﻿/*! 
-*	\class Byte
+*	\file Byte.cpp
 *	\author Clemens J. Zuzan
 *	\author Klemens Svetitsch
-*	\brief  Implemenation of Byte class.
 */
 
 #include <avr/io.h>

@@ -2,7 +2,7 @@
 * 	\class Fan
 * 	\author Clemens J. Zuzan
 *	\author Klemens Svetitsch
-*	\brief The Fan class contains functions and data directly linked to the fan. (Except for period and speed related calculus which is found in the more general RotationTachymeter class.)
+*	\brief Controls and monitors a physical cooling fan, using ADCInput for user input, PWMOutput for controlling and RotationTachymeter for measuring fan speed
 */
 
 #include <avr/io.h>
@@ -18,10 +18,10 @@
 Fan::Fan() :
 m_tachymeter(INT0),
 m_adcInput(PA0, this),
-m_pwmOutput(2, PWMPrescalers::_1) /*!< pwm output frequency is supposed to be higher than 20k -> 8M/256 = 31.25k, no prescaler required for PWM 
+m_pwmOutput(2, PWMPrescalers::_1) /* pwm output frequency is supposed to be higher than 20k -> 8M/256 = 31.25k, no prescaler required for PWM 
 									2 means: 8bit timer used*/
 {	
-	/*! We are not recording a signal here, just reading some human input. 
+	/* We are not recording a signal here, just reading some human input. 
 		Therefore response time and time resolution are not essential and
 		so the highest prescaler (128) should be sufficient. */
 	m_adcInput.SetPrescaler(ADCPrescalers::_128);
