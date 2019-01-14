@@ -16,8 +16,8 @@
 #define UBRR(baud) ((F_CPU)/(baud*16UL)-1)
 
 
-CircularBuffer UsartController::s_transmit_buffer;
-CircularBuffer UsartController::s_receive_buffer;
+CircularBuffer UsartController::s_transmit_buffer(32);
+CircularBuffer UsartController::s_receive_buffer(128);
 volatile uint8_t UsartController::s_char_buffer = 0;
 
 
@@ -101,6 +101,16 @@ void UsartController::SetBaudrate(BaudRate baudrate)
 	UBRRL = baudrate_nr;
 }
 
+void UsartController::Transmit(const char data_tx[], int length) {
+	for(int pos = 0; pos < length; ++pos) {
+		UsartController::s_transmit_buffer.Push(data_tx[pos]);
+	}
+	
+	// if the current transmit buffer is empty the transmit interrupt will not be called automatically, therefore we trigger it manually
+	if (UCSRA & (1 << UDRE)) {
+		USART_TXC_vect();
+	}
+}
 
 //! Push the passed string data into a ring buffer and transmit the data as fast as possible.
 void UsartController::Transmit(const char data_tx[])
@@ -133,7 +143,22 @@ void UsartController::GetReceiveData(uint8_t* out_data)
 	}
 }
 
+void UsartController::GetReceiveData(uint8_t* out_data, uint8_t length)
+{
+	uint8_t load = UsartController::s_receive_buffer.GetLoad();
+	if (load > length) {
+		UsartController::s_receive_buffer.ForwardReadPointer(load - length);
+	}
+	
+	char char_buffer;
+	while (UsartController::s_receive_buffer.Pop(&char_buffer)) {
+		*(out_data++) = char_buffer;
+	}
+}
+
+
 char c_char_buffer;
+volatile uint16_t char_counter = 0;
 
 //! This interrupt is called when the last USART message has been sent out, indicating that the next message can be sent
 void USART_TXC_vect(void) {
@@ -146,7 +171,10 @@ void USART_TXC_vect(void) {
 
 //! This interrupt is called when a USART message has been received, indicating that the data should be retrieved from the register and stored
 void USART_RXC_vect(void) {
-	PORTA ^= (1 << PA2);
-	c_char_buffer = UDR;
+	//PORTA ^= (1 << PA1);
+	
+	char_counter++;
+	c_char_buffer = UDR;	
+	
 	UsartController::s_receive_buffer.Push(c_char_buffer);
 }

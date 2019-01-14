@@ -20,6 +20,7 @@
 #include "CircularBuffer.h"
 #include "UsartController.h"
 #include "BaudRates.h"
+#include "FanDataDisplay.h"
 
 
 // the delays specified below cannot be used to calculate FPS because this would ignore the time taken by the instructions excecuted in each loop
@@ -34,12 +35,14 @@ const int large_delay_steps = large_delay / small_delay;
 int main(void)
 {	
 	//DDRA |= (1 << PA2);
+	DDRA = 0xFF;
+	
 	UsartController serial_controller = UsartController(BaudRates::_9600, true, true);
-	Fan fan = Fan();
+	Fan fan = Fan(serial_controller);
 	sei();
 	
 	Port ledBarPort(&PORTA,&DDRA,&PINA);
-	LedBarMeter ledBarMeter(ledBarPort); 
+	LedBarMeter ledBarMeter(ledBarPort);
 	
 	// create an instance of the Lcd display and initialize it with a "welcome" message
 	Lcd lcd = Lcd();
@@ -52,17 +55,11 @@ int main(void)
 	lcd.ClearDisplay();
 	int lcd_delay_update_counter = 0;
 	
-	char pulse_length_us_str[5];
-	char adc_output_str[5];
-	uint16_t fan_duty_cycle = 0;
 	
-	serial_controller.Transmit("\e[1A\r\n");
-	serial_controller.Transmit("\e[38;5;196m");
-	serial_controller.Transmit("ITS uC Labor\r\n");
-	serial_controller.Transmit("Fan Controller\r\n");
-	serial_controller.Transmit(" Duty  | Pulse Time |  RPM  \r\n");
-	serial_controller.Transmit("\r\n");
-	serial_controller.Transmit("\e[38;5;255m");
+	uint8_t fan_duty_cycle_byte = 0;
+	
+	FanDataDisplay fan_data_display(fan, lcd);
+	//char str[10];
 	
 	_delay_ms(50);
 	
@@ -70,8 +67,8 @@ int main(void)
     {
 		_delay_ms(small_delay);
 		
-		fan_duty_cycle = fan.GetFanSpeedAsSingleByte(); // returns number between 0 and 255
-		ledBarMeter.setValue(fan_duty_cycle);
+		fan_duty_cycle_byte = fan.GetFanSpeedAsSingleByte(); // returns number between 0 and 255
+		ledBarMeter.setValue(fan_duty_cycle_byte);
 		ledBarMeter.displayValue();
 		
 		
@@ -83,61 +80,21 @@ int main(void)
 		if (lcd_delay_update_counter >= large_delay_steps) {
 			//lcd.clearDisplay(); // this may be too slow
 			
-			fan_duty_cycle = (100 * fan_duty_cycle) / 255;
-			
-			lcd.SetCursorPosition(1, 0);
-			lcd.Print("Fan: ");
-			sprintf(adc_output_str, "%3d", fan_duty_cycle);
-			lcd.Print(adc_output_str);
-			lcd.Print("%");
+			fan.Update();
+			fan_data_display.UpdateDisplay();
 			
 			
+			//lcd.SetCursorPosition(1, 0);
+			//sprintf(str, "%u", serial_controller.s_receive_buffer.GetLoad());
 			
-			serial_controller.Transmit("\e[1A ");
-			serial_controller.Transmit(adc_output_str);
-			serial_controller.Transmit("%  ");
+			//lcd.Print(str);
 			
+			//char data_package[] = { 0x01, 0x01, 0b01110000, fan_duty_cycle_byte, rpm >> 8, rpm >> 0, revolution_period >> 8, revolution_period >> 0};
+			//serial_controller.Transmit(data_package);
 			
-			
-			//send current data to Lcd for display
-			lcd.SetCursorPosition(2, 0);
-			sprintf(pulse_length_us_str, "%5ld", fan.GetFanRevolutionPeriodInMicroseconds());
-			lcd.Print(pulse_length_us_str);
-			lcd.Print("us");
-			lcd.Print(" ");
-			
-			//send current data to USART (PC). Data can be fetched on USB using a terminal like putty.
-			serial_controller.Transmit("|   ");
-			serial_controller.Transmit(pulse_length_us_str);
-			serial_controller.Transmit("us");
-			serial_controller.Transmit("  ");
-			
-			sprintf(pulse_length_us_str, "%4d", fan.GetFanSpeedInRoundsPerMinute());
-			lcd.Print(pulse_length_us_str);
-			lcd.Print("rpm");
-			
-			
-			serial_controller.Transmit("| ");
-			serial_controller.Transmit(pulse_length_us_str);
-			serial_controller.Transmit("\r\n");
 			
 			
 			lcd_delay_update_counter = 0;
-			
-			
-			// SECTION receive data via serial interface
-			uint8_t receive_buf_len = serial_controller.GetReceiveBufferLength();
-			
-			if (receive_buf_len > 0) {
-				uint8_t receive_buf[receive_buf_len];
-				serial_controller.GetReceiveData(receive_buf);
-			
-				//serial_controller.Transmit((char *)receive_buf);
-				//serial_controller.Transmit("\r\n");
-				
-				//lcd.setCursorPosition(0, 10);
-				//lcd.print((char *)receive_buf);
-			}
 		}
     }
 }

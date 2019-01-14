@@ -202,10 +202,31 @@
     <Compile Include="CircularBuffer.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="DataLink.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Fan.cpp">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Fan.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="FanControlMessage.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="FanControlMessage.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="FanControlProtocol.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="FanControlProtocol.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="FanDataDisplay.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="FanDataDisplay.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Lcd.cpp">

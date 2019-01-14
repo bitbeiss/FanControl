@@ -27,14 +27,14 @@ RotationTachymeter::~RotationTachymeter()
 
 // PUBLIC functions
 //! returns the measured rotation speed in the unit rounds per minute
-int RotationTachymeter::GetRotationSpeedInRoundsPerMinute()
+uint16_t RotationTachymeter::GetRotationSpeedInRoundsPerMinute()
 {
 	this->m_rpm = RotationTachymeter::RPM_MULTIPLIER / RotationTachymeter::m_timer_value;
 	return this->m_rpm;
 }
 
 //! returns the measured period length of one revolution in microseconds
-long RotationTachymeter::GetRotationPeriodLengthInMicroseconds() {
+uint16_t RotationTachymeter::GetRotationPeriodLengthInMicroseconds() {
 	this->m_period_width_us = RotationTachymeter::PERIOD_WIDTH_MULTIPLIER * RotationTachymeter::m_timer_value;
 	return this->m_period_width_us;
 }

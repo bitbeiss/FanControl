@@ -18,21 +18,21 @@ class RotationTachymeter
 // constants
 public:
 	/*! Prescaler to use for measuring the duration between input pulses */
-	static const unsigned int PRESCALER = 64;
+	static const uint8_t PRESCALER = 64;
 	
 	/*! Factor to get from timer counts to microseconds with prescaler 64 */
-	static const unsigned long PERIOD_WIDTH_MULTIPLIER = 1000000 * PRESCALER / F_CPU;
+	static const uint16_t PERIOD_WIDTH_MULTIPLIER = 1000000 * PRESCALER / F_CPU;
 	
-	/*! Times 60 for rps to rpm, times 1m for rpus to rps */
-	static const unsigned long RPM_MULTIPLIER = (1000000 * 60)/(2 * PERIOD_WIDTH_MULTIPLIER);
+	/*! Times 60 for rps to rpm, times 1M for rpus to rps */
+	static const uint32_t RPM_MULTIPLIER = (1000000 * 60)/(2 * PERIOD_WIDTH_MULTIPLIER);
 	
 //variables
 public:
 	
 protected:
 private:
-	volatile int m_rpm;
-	volatile long m_period_width_us;
+	volatile uint16_t m_rpm;
+	volatile uint16_t m_period_width_us;
 	static volatile uint16_t m_timer_value;
 
 //functions
@@ -40,8 +40,8 @@ public:
 	RotationTachymeter(uint8_t interrupt_pin);
 	~RotationTachymeter();
 	
-	long GetRotationPeriodLengthInMicroseconds();
-	int GetRotationSpeedInRoundsPerMinute();
+	uint16_t GetRotationPeriodLengthInMicroseconds();
+	uint16_t GetRotationSpeedInRoundsPerMinute();
 	
 	friend void INT0_vect(void);
 	
